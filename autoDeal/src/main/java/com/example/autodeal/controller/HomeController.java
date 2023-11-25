@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(Model model){
-        model.addAttribute("username", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        model.addAttribute("username", SecurityContextHolder.getContext().getAuthentication().getName());
         return "home";}
 
     @GetMapping("/login")
