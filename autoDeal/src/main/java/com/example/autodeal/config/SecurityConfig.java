@@ -28,6 +28,7 @@ public class SecurityConfig {
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
+
         return new BCryptPasswordEncoder();
     }
 
@@ -39,10 +40,10 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Ustawienie polityki sesji na bezstanową
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole(UserRole.ROLE_ADMIN.getRole())
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/orders").authenticated()
                         .anyRequest().permitAll())
-                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))  // Dodanie niestandardowego filtra JWT
+               // .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))  // Dodanie niestandardowego filtra JWT
                 .formLogin(form -> form  // Konfiguracja formularza logowania
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
