@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @Configuration
@@ -32,16 +33,27 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, UserDetailsService userDetailsService) throws Exception {
-        return http.authorizeHttpRequests(auth -> auth
+        http
+                .csrf().disable()  // Wyłączenie ochrony CSRF
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Ustawienie polityki sesji na bezstanową
+                .and()
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole(UserRole.ROLE_ADMIN.getRole())
                         .requestMatchers(HttpMethod.GET, "/orders").authenticated()
                         .anyRequest().permitAll())
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))
-                .build();
-    }
+                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))  // Dodanie niestandardowego filtra JWT
+                .formLogin(form -> form  // Konfiguracja formularza logowania
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/")
+                        .permitAll())
+                .logout(logout -> logout  // Konfiguracja wylogowania
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                        .permitAll());
 
+        return http.build();
+    }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
