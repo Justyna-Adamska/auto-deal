@@ -3,6 +3,8 @@ INSERT INTO customer (first_name, last_name, password, email, phone) VALUES ('Ja
 --hasło to 'abc'
 
 
+
+
 -- INSERT INTO user (firstName) VALUES ('Janusz');
 -- INSERT INTO user (lastName) VALUES ('Kowalski');
 -- INSERT INTO user (password) VALUES ('xyx');
