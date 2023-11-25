@@ -2,9 +2,13 @@ package com.example.autodeal.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Data
@@ -41,5 +45,10 @@ public class UserModel {
 
     @Column(name = "lastLoginDate")
     private LocalDateTime lastLoginDate;
+
+
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<UserRole> roles;
 
 }

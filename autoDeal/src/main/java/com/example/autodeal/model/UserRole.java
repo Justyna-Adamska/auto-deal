@@ -1,16 +1,16 @@
 package com.example.autodeal.model;
 
-public enum UserRole {
-    ROLE_ADMIN("ADMIN"),
-    ROLE_CUSTOMER("CUSTOMER");
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
 
-    private String role;
-
-    UserRole(String role) {
-        this.role = role;
-    }
-
-    public String getRole() {
-        return role;
-    }
+@Entity
+@Data
+public class UserRole {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private String name;
 }

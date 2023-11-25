@@ -1,8 +1,5 @@
 package com.example.autodeal.config;
 
-import com.example.autodeal.model.AutoDealUserDetails;
-import static org.springframework.security.config.Elements.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -54,8 +52,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         .verify(token.replace(TOKEN_PREFIX, ""))
                         .getSubject();
                 if (id != null) {
-                    AutoDealUserDetails userDetails = (AutoDealUserDetails) userDetailsService.loadUserByUsername(id);
-                    return new UsernamePasswordAuthenticationToken(userDetails.getId(), null, userDetails.getAuthorities());
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(id);
+                    return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 }
             } catch (Exception e) {
                 log.error("Błąd podczas weryfikacji tokenu JWT: " + e.getMessage());
