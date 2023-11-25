@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .formLogin(form -> form  // Konfiguracja formularza logowania
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/home",true)
                         .permitAll())
                 .logout(logout -> logout  // Konfiguracja wylogowania
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
