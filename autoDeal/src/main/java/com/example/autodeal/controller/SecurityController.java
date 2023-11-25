@@ -1,0 +1,19 @@
+package com.example.autodeal.controller;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+@Slf4j
+public class SecurityController {
+@GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/logout-success")
+    public String logout() {
+        return "logout";
+    }
+}
