@@ -1,11 +1,11 @@
  INSERT INTO customer (first_name, last_name, password, email, phone) VALUES ('Jan','Kowalski', '$2a$10$qf69GDBrAJqbzyPkNCtCqu6sviASNVzd3ja60BTi11NlKagCkn5z6','jan.kowalski@gmail.com', '501-123-456');
 --hasło to 'abc'
 
+ INSERT INTO customer (first_name, last_name, password, email, phone) VALUES ('Jan','Kot', '$2a$10$Sj393/G2PgIJeJpStvxizOpOYBZJ8pDZCJu0OauiDW4sZuWrZa.9u','jan.kot@gmail.com', '501-123-002');
+--hasło to 'asd'
 
+INSERT INTO user_role (name) VALUES ('ROLE_ADMIN');
+INSERT INTO user_role (name) VALUES ('ROLE_USER');
 
-
--- INSERT INTO user (firstName) VALUES ('Janusz');
--- INSERT INTO user (lastName) VALUES ('Kowalski');
--- INSERT INTO user (password) VALUES ('xyx');
--- INSERT INTO user (email) VALUES ('janusz.kowalski@gmail.com');
--- INSERT INTO user (phone) VALUES ('501-789-456');
+INSERT INTO user_x_roles VALUES (1,1);
+INSERT INTO user_x_roles VALUES (2,2);
