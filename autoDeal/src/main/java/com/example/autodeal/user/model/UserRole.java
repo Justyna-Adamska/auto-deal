@@ -1,4 +1,4 @@
-package com.example.autodeal.model;
+package com.example.autodeal.user.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

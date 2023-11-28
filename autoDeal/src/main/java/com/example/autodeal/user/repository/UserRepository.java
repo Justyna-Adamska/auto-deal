@@ -1,7 +1,8 @@
-package com.example.autodeal.repository;
+package com.example.autodeal.user.repository;
 
-import com.example.autodeal.model.UserModel;
+import com.example.autodeal.user.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

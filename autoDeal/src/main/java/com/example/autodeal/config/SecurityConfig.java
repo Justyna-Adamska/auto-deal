@@ -1,6 +1,5 @@
 package com.example.autodeal.config;
 
-import com.example.autodeal.model.UserRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,21 +34,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, UserDetailsService userDetailsService) throws Exception {
         http
-                .csrf().disable()  // Wyłączenie ochrony CSRF
+                .csrf().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Ustawienie polityki sesji na bezstanową
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  //
                 .and()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/orders").authenticated()
                         .anyRequest().permitAll())
-               // .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))  // Dodanie niestandardowego filtra JWT
-                .formLogin(form -> form  // Konfiguracja formularza logowania
+//                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))
+                .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/home",true)
                         .permitAll())
-                .logout(logout -> logout  // Konfiguracja wylogowania
+                .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .permitAll());
 
