@@ -1,4 +1,4 @@
-package com.example.autodeal.controller;
+package com.example.autodeal.user.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +10,8 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        // Metoda obsługująca ścieżkę /admin/dashboard
-        return "adminDashboard"; // Nazwa widoku (np. strony HTML)
+
+        return "adminDashboard";
     }
 
 }

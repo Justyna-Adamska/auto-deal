@@ -1,7 +1,7 @@
-package com.example.autodeal.mapper;
+package com.example.autodeal.user.mapper;
 
-import com.example.autodeal.dto.UserDto;
-import com.example.autodeal.model.UserModel;
+import com.example.autodeal.user.dto.UserDto;
+import com.example.autodeal.user.model.UserModel;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
