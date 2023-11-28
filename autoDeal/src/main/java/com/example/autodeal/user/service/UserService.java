@@ -25,20 +25,24 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    public void addUser(UserModel user){
+        userRepository.save(user);
+    }
+
     public List<UserModel> findAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<UserModel> findUserById(Integer id) {
-        return userRepository.findById(id);
+    public UserModel findUserById(Integer id) {
+        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("Could not find user by id"));
     }
 
     public UserModel findUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(()->new RuntimeException("Could not find user by email"));
     }
 
-    public UserModel saveUser(UserModel user) {
-        return userRepository.save(user);
+    public void saveEditUser(UserModel editUser) {
+        userRepository.save(editUser);
     }
 
     public void deleteUser(Integer id) {
@@ -48,7 +52,6 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel user = findUserByEmail(email);
-
 
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
