@@ -48,6 +48,7 @@ public class UserModel {
 
 
     @ManyToMany
+    @JoinTable (name="user_x_roles")
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<UserRole> roles;
 

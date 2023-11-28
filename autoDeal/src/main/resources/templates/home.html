@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
@@ -9,9 +10,11 @@
         .navbar-text {
             display: block;
         }
+
         .navbar-text {
-            color: rgba(255,255,255,.5);
+            color: rgba(255, 255, 255, .5);
         }
+
         .logout-btn {
             margin-left: auto;
         }
@@ -24,12 +27,13 @@
             <a class="navbar-brand" href="#" th:href="@{/}">Auto-Deal</a>
 
             <span class="navbar-text">
-              Witaj <span th:text="${username}">userName</span>
+              Witaj <span th:text="${username}"></span>
 
-                (<span th:text="${userRole}">userRole</span>)
+                (<span th:text="${userRole}"></span>)
             </span>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -38,8 +42,32 @@
     </div>
 </nav>
 <div class="container mt-4">
+    <h2>Welcome</h2>
+    <p>Spring Security Thymeleaf tutorial</p>
+    <div sec:authorize="hasRole('USER')">
 
+
+        <p><button type="button" class="btn btn-success">BUTTON ONLY FOR USER</button></p>
+
+    </div>
+
+
+
+
+    <div sec:authorize="hasRole('ADMIN')">
+
+        <p><button type="button" class="btn btn-danger">BUTTON ONLY FOR ADMIN</button></p>
+
+
+    </div>
+    <div sec:authorize="isAuthenticated()"> Text visible only to authenticated users.</div>
+    Authenticated username:
+    <div sec:authentication="name"></div>
+    Authenticated user roles:
+    <span sec:authentication="authorities"></span>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
+
 </html>

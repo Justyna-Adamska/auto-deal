@@ -34,10 +34,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, UserDetailsService userDetailsService) throws Exception {
         http
-                .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  //
-                .and()
+//                .csrf().disable()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  //
+//
+                .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/orders").authenticated()
@@ -45,7 +46,7 @@ public class SecurityConfig {
 //                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/login")
+
                         .defaultSuccessUrl("/home",true)
                         .permitAll())
                 .logout(logout -> logout
