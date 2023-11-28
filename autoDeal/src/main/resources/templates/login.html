@@ -2,14 +2,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand">Witaj nieznajomy</a>
+        <a class="navbar-brand">Auto-Deal</a>
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -34,22 +32,27 @@
                     <h2 class="text-center">Login</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" role="form" th:action="@{/login}"
-                          class="form-horizontal">
+                    <form method="post" th:action="@{/login}" class="form-horizontal">
                         <div class="form-group mb-3">
-                            <label class="control-label"> Username</label> <input type="text"
-                                                                                  id="username" name="username" class="form-control"
-                                                                                  placeholder="Enter username" />
+                            <label class="control-label"> Username</label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" />
                         </div>
                         <div class="form-group mb-3">
-                            <label class="control-label"> Password</label> <input
-                                type="password" id="password" name="password"
-                                class="form-control" placeholder="Enter password" />
+                            <label class="control-label"> Password</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" />
                         </div>
                         <div class="form-group mb-3">
                             <button type="submit" class="btn btn-primary">Login</button>
                         </div>
+                        <!-- TODO: Forgot Password Link -->
+                        <div class="form-group">
+                            <a th:href="@{/forgot-password}" class="link-primary">Forgot Password?</a>
+                        </div>
                     </form>
+                </div>
+                <!--TODO:  Registration Link -->
+                <div class="card-footer text-center">
+                    <p>Don't have an account? <a th:href="@{/register}" class="link-primary">Sign up</a></p>
                 </div>
             </div>
         </div>

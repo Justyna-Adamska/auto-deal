@@ -1,5 +1,4 @@
-INSERT INTO customer (first_name, last_name, password, email, phone) VALUES ('Jan','Kowalski', '$2a$10$qf69GDBrAJqbzyPkNCtCqu6sviASNVzd3ja60BTi11NlKagCkn5z6','jan.kowalski@gmail.com', '501-123-456');
-
+ INSERT INTO customer (first_name, last_name, password, email, phone) VALUES ('Jan','Kowalski', '$2a$10$qf69GDBrAJqbzyPkNCtCqu6sviASNVzd3ja60BTi11NlKagCkn5z6','jan.kowalski@gmail.com', '501-123-456');
 --hasło to 'abc'
 
 
