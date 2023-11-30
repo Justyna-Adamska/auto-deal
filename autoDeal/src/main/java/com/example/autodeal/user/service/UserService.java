@@ -5,8 +5,10 @@ import com.example.autodeal.exception.UserNotFoundException;
 import com.example.autodeal.user.dto.SignUpDto;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.model.UserRole;
+import com.example.autodeal.user.model.VerificationToken;
 import com.example.autodeal.user.repository.UserRepository;
 import com.example.autodeal.user.repository.UserRoleRepository;
+import com.example.autodeal.user.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +17,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.Date;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,12 +30,15 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final NotificationService notificationService;
+    private final VerificationTokenRepository verificationTokenRepository;
     @Autowired
-    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, NotificationService notificationService, VerificationTokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
+        this.verificationTokenRepository = tokenRepository;
     }
 
     public void addUser(UserModel user){
@@ -64,6 +70,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel user = findUserByEmail(email);
 
+        if (!user.isEnabled()) {
+            throw new UsernameNotFoundException("User not activated");
+        }
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
@@ -78,17 +87,32 @@ public class UserService implements UserDetailsService {
         });
 
         UserModel newUser = new UserModel();
-        newUser.setFirstName(signUpDto.getFirstName());
-        newUser.setLastName(signUpDto.getLastName());
-        newUser.setEmail(signUpDto.getEmail());
-        newUser.setPhone(signUpDto.getPhone());
-        newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
         UserRole defaultRole = userRoleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new UserAlreadyExistsException("Default role not found."));
+                .orElseThrow(() -> new RuntimeException("Default role not found."));
         newUser.setRoles(Set.of(defaultRole));
 
-        return userRepository.save(newUser);
+        UserModel savedUser = userRepository.save(newUser);
+
+        String activationToken = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(activationToken);
+        verificationToken.setUserModel(savedUser);
+        verificationToken.setExpiryDate(new Date());
+        verificationTokenRepository.save(verificationToken);
+
+        notificationService.sendActivationEmail(newUser.getEmail(), activationToken);
+
+        return savedUser;
+    }
+
+    public void confirmUserRegistration(String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        UserModel user = verificationToken.getUserModel();
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 
 }

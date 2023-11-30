@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.stream.Collectors;
 
@@ -31,6 +32,12 @@ public class HomeController {
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
         userService.registerNewUser(signUpDto);
         return ResponseEntity.ok("User is registered successfully!");
+    }
+
+    @GetMapping("/registrationConfirm")
+    public String confirmRegistration(@RequestParam("token") String token) {
+        userService.confirmUserRegistration(token);
+        return "accountVerified";
     }
 
     @GetMapping("/home")

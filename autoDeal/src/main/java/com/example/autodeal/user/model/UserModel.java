@@ -46,6 +46,16 @@ public class UserModel {
     @Column(name = "lastLoginDate")
     private LocalDateTime lastLoginDate;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public UserModel() {
+        super();
+        this.enabled=false;
+    }
+
+    @Column(name = "resetToken")
+    private String resetToken;
 
     @ManyToMany
     @JoinTable (name="user_x_roles")
