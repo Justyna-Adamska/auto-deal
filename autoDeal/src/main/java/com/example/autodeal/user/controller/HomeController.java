@@ -20,7 +20,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeController {
 
+
     private final UserService userService;
+   
 
     @Autowired
     public HomeController(UserService userService) {
@@ -61,4 +63,5 @@ public class HomeController {
     public String logout() {
         return "redirect:/login";
     }
+
 }
