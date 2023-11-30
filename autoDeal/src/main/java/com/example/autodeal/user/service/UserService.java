@@ -17,11 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Date;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -69,10 +67,11 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel user = findUserByEmail(email);
+        Boolean isActivated = Optional.ofNullable(user.getEnabled()).orElse(false);
 
-        if (!user.isEnabled()) {
-            throw new UsernameNotFoundException("User not activated");
-        }
+       // if (!isActivated) {
+         //   throw new UsernameNotFoundException("User not activated");
+        //}
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

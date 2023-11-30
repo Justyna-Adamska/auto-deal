@@ -47,7 +47,7 @@ public class UserModel {
     private LocalDateTime lastLoginDate;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private Boolean enabled;
 
     public UserModel() {
         super();
