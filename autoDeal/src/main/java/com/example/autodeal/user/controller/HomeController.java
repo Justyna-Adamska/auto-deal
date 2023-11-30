@@ -41,14 +41,6 @@ public class HomeController {
     private PasswordEncoder passwordEncoder;
 
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
-//        Authentication authentication = authenticationManager
-//                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
-//    }
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto){
 
@@ -99,4 +91,5 @@ public class HomeController {
     public String logout() {
         return "redirect:/login";
     }
+
 }

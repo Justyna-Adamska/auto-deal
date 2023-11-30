@@ -1,7 +1,9 @@
 package com.example.autodeal.user.service;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.example.autodeal.user.dto.UserDto;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.model.UserRole;
 import com.example.autodeal.user.repository.UserRepository;
@@ -15,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class UserServiceTest {
@@ -63,6 +66,16 @@ public class UserServiceTest {
         assertThrows(UsernameNotFoundException.class, () -> {
             userService.loadUserByUsername("notfound@example.com");
         });
+    }
+
+    @Test
+    void shouldReturnEmptyListIfNothingInDb() {
+        when(userRepository.findAll()).thenReturn(List.of());
+        when(userRoleRepository.findAll()).thenReturn(List.of());
+
+        List<UserModel> result = userService.findAllUsers();
+
+        assertThat(result).isEmpty();
     }
 
 

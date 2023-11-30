@@ -4,10 +4,7 @@ import com.example.autodeal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -37,35 +34,17 @@ public class UserController {
         return new RedirectView(("/home"));//po dodaniu uzytkownika przenosi nas na stronę główną
     }
 
-    @GetMapping("/users")
-    public String findAllUsers(Model model){
-        List<UserModel> userList = userService.findAllUsers();
-        model.addAttribute("userModel", userList);
-        return "/userList";
-    }
-
-    @GetMapping("/editUser/{id}")
-    public String getEditUser(@PathVariable("id") Integer id, Model model)
-    {
-        UserModel userModel = userService.findUserById(id);
-
-        model.addAttribute("user", userModel);
-
-        return "/editUser";
-
-    }
-
-    @PostMapping("/editUser/{id}")
+    // /user/{id}       - PUT edit user
+    // /user/{id}       - GET self
+    @PutMapping("/editUser/{id}")    //musimy upewnić sie, że edytujemy tylko własny id użytkownika
     public RedirectView postEditUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
-        return new RedirectView("/editUser/{id}");
+        return new RedirectView("/home");
     }
 
-    @PostMapping("delete/{id}")
-    public RedirectView deleteUser(@PathVariable("id") Integer id)
-    {
-        userService.deleteUser(id);
-        return  new RedirectView("/home");
+    @GetMapping("/getUser/{id}") //pobieramy profil użytkownika po własnym id
+    public String getUser(@PathVariable ("id") Integer id, UserModel getUser) {
+        userService.findUserById(id);
+    return "/user/{id}";
     }
-
 }
