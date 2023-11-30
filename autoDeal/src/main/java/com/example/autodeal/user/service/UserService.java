@@ -39,6 +39,10 @@ public class UserService implements UserDetailsService {
         this.verificationTokenRepository = tokenRepository;
     }
 
+    private boolean emailExist(String email) {
+        return userRepository.findByEmail(email) != null;
+    }
+
     public void addUser(UserModel user){
         userRepository.save(user);
     }
