@@ -40,7 +40,7 @@ public class UserServiceTest {
 
         UserRole userRoleUser = new UserRole();
         userRoleUser.setName("ROLE_USER");
-        when(userRoleRepository.findByName("ROLE_USER")).thenReturn(userRoleUser);
+        when(userRoleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(userRoleUser));
 
         userModel = new UserModel();
         userModel.setEmail("jan.kot@gmail.com");
