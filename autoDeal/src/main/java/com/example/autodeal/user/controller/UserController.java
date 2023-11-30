@@ -25,7 +25,8 @@ public class UserController {
     }
 
 
-    @GetMapping("/addUser")
+    @GetMapping("/user/{id}")
+//    @GetMapping("/user/{id}")
     public String getaddUser(){
         return "users/addNewUser"; //ustawić odpowiednie widoki (nazwy)
     }
