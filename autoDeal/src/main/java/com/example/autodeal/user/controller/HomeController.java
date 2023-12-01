@@ -1,13 +1,18 @@
 package com.example.autodeal.user.controller;
 
 import com.example.autodeal.user.dto.SignUpDto;
+import com.example.autodeal.user.repository.UserRepository;
+import com.example.autodeal.user.repository.UserRoleRepository;
 import com.example.autodeal.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,12 +28,14 @@ public class HomeController {
 
 
     private final UserService userService;
-   
+
+
 
     @Autowired
     public HomeController(UserService userService) {
         this.userService = userService;
     }
+
 
     @PostMapping("/registration")
     public ResponseEntity<?> registerNewUser(@RequestBody SignUpDto signUpDto) {
@@ -41,6 +48,7 @@ public class HomeController {
         userService.confirmUserRegistration(token);
         return "accountVerified";
     }
+
 
     @GetMapping("/home")
     public String home(Model model) {

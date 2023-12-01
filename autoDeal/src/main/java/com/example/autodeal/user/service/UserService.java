@@ -40,7 +40,9 @@ public class UserService implements UserDetailsService {
         this.verificationTokenRepository = tokenRepository;
     }
 
+
     public void addUser(UserModel user) {
+
         userRepository.save(user);
     }
 
