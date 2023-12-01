@@ -1,60 +1,93 @@
 package com.example.autodeal.user.controller;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.mockito.ArgumentMatchers.any;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
-import com.example.autodeal.user.dto.LoginDto;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+
+import com.example.autodeal.user.dto.SignUpDto;
+import com.example.autodeal.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-public class HomeControllerTest {
+@AutoConfigureMockMvc
+@SpringBootTest
+@RunWith(SpringRunner.class)
+class HomeControllerTest {
 
     private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
 
     @Mock
-    private AuthenticationManager authenticationManager;
-    private Model model;
+    private UserService userService;
 
     @InjectMocks
     private HomeController homeController;
 
     @BeforeEach
-    public void setup() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
-        SecurityContextHolder.clearContext();
+        mockMvc = standaloneSetup(homeController).build();
+        objectMapper = new ObjectMapper();
     }
 
     @Test
-    public void testAuthenticateUser() throws Exception {
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail("test@example.com");
-        loginDto.setPassword("password");
+    void whenRegisterUser_thenResponseIsOkAndContentIsCorrect() throws Exception {
+        SignUpDto signUpDto = new SignUpDto(); // Populate with test data
+        String signUpDtoJson = objectMapper.writeValueAsString(signUpDto);
 
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(mock(Authentication.class));
-
-        mockMvc.perform(post("/login")
+        mockMvc.perform(post("/registration")
                         .contentType("application/json")
-                        .content(new ObjectMapper().writeValueAsString(loginDto)))
-                .andExpect(status().isOk());
-
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+                        .content(signUpDtoJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("User is registered successfully!"));
     }
 
-}
+    @Test
+    void whenConfirmRegistration_thenViewNameIsAccountVerified() throws Exception {
+        mockMvc.perform(get("/registrationConfirm").param("token", "valid-token"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("accountVerified"));
+    }
 
+//    @Test
+//    @WithMockUser(username = "testUser", roles = {"USER", "ADMIN"})
+//    void whenRequestHomePage_thenViewNameIsHome() throws Exception {
+//        mockMvc.perform(get("/home"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("home"))
+//                .andExpect(model().attributeExists("username"))
+//                .andExpect(model().attributeExists("userRole"));
+//    }
+//    @Test
+//    @WithMockUser
+//    void whenRequestLoginPage_thenViewNameIsLogin() throws Exception {
+//        mockMvc.perform(get("/login"))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("login"));
+//    }
+
+    @Test
+    void whenRequestAdminPage_thenViewNameIsAdmin() throws Exception {
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("adminDashboard"));
+    }
+
+    @Test
+    void whenRequestLogout_thenRedirectToLogin() throws Exception {
+        mockMvc.perform(get("/logout"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+}

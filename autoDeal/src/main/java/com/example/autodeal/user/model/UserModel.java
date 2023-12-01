@@ -51,7 +51,7 @@ public class UserModel {
 
     public UserModel() {
         super();
-        this.enabled=false;
+        this.enabled = false;
     }
 
     @Column(name = "resetToken")

@@ -30,6 +30,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final NotificationService notificationService;
     private final VerificationTokenRepository verificationTokenRepository;
+
     @Autowired
     public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, NotificationService notificationService, VerificationTokenRepository tokenRepository) {
         this.userRepository = userRepository;
@@ -39,11 +40,9 @@ public class UserService implements UserDetailsService {
         this.verificationTokenRepository = tokenRepository;
     }
 
-    private boolean emailExist(String email) {
-        return userRepository.findByEmail(email) != null;
-    }
 
-    public void addUser(UserModel user){
+    public void addUser(UserModel user) {
+
         userRepository.save(user);
     }
 
@@ -52,7 +51,7 @@ public class UserService implements UserDetailsService {
     }
 
     public UserModel findUserById(Integer id) {
-        return userRepository.findById(id).orElseThrow(()-> new RuntimeException("Could not find user by id"));
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Could not find user by id"));
     }
 
     public UserModel findUserByEmail(String email) {
@@ -73,8 +72,8 @@ public class UserService implements UserDetailsService {
         UserModel user = findUserByEmail(email);
         Boolean isActivated = Optional.ofNullable(user.getEnabled()).orElse(false);
 
-       // if (!isActivated) {
-         //   throw new UsernameNotFoundException("User not activated");
+        // if (!isActivated) {
+        //   throw new UsernameNotFoundException("User not activated");
         //}
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
@@ -85,11 +84,17 @@ public class UserService implements UserDetailsService {
     }
 
     public UserModel registerNewUser(SignUpDto signUpDto) {
+
         userRepository.findByEmail(signUpDto.getEmail()).ifPresent(u -> {
             throw new UserAlreadyExistsException("Registration failed, please try again.");
         });
 
         UserModel newUser = new UserModel();
+        newUser.setFirstName(signUpDto.getFirstName());
+        newUser.setLastName(signUpDto.getLastName());
+        newUser.setPhone(signUpDto.getPhone());
+        newUser.setEmail(signUpDto.getEmail());
+        newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword())); // Encode password
 
         UserRole defaultRole = userRoleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default role not found."));
@@ -108,6 +113,7 @@ public class UserService implements UserDetailsService {
 
         return savedUser;
     }
+
 
     public void confirmUserRegistration(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
