@@ -1,0 +1,10 @@
+name: GitHub PR checks
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: pull_request:
+        types: [opened, reopened, review_request]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The PR job was automatically triggered by a ${{ github.event_name }} event."
+
