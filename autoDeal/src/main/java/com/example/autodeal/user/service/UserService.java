@@ -88,8 +88,11 @@ public class UserService implements UserDetailsService {
         });
 
         UserModel newUser = new UserModel();
+        newUser.setFirstName(signUpDto.getFirstName());
+        newUser.setLastName(signUpDto.getLastName());
+        newUser.setPhone(signUpDto.getPhone());
         newUser.setEmail(signUpDto.getEmail());
-        newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword())); // Zakodowanie hasła
+        newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword())); // Encode password
 
         UserRole defaultRole = userRoleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default role not found."));

@@ -31,7 +31,7 @@ public class HomeController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<?> registerNewUser(@RequestBody SignUpDto signUpDto) {
         userService.registerNewUser(signUpDto);
         return ResponseEntity.ok("User is registered successfully!");
     }
@@ -61,9 +61,10 @@ public class HomeController {
         return "login";
     }
 
+
     @GetMapping("/admin")
     public String admin() {
-        return "admin";
+        return "adminDashboard";
     }
 
     @GetMapping("/logout")
