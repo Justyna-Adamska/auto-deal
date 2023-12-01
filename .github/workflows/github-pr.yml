@@ -1,7 +1,8 @@
 name: GitHub PR checks
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: pull_request:
-        types: [opened, reopened, review_request]
+on:
+  pull_request:
+    types: [opened, reopened, review_request]
 jobs:
   build:
 
