@@ -37,17 +37,17 @@ public class HomeController {
     }
 
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> registerNewUser(@RequestBody SignUpDto signUpDto) {
-        userService.registerNewUser(signUpDto);
-        return ResponseEntity.ok("User is registered successfully!");
-    }
-
-    @GetMapping("/registrationConfirm")
-    public String confirmRegistration(@RequestParam("token") String token) {
-        userService.confirmUserRegistration(token);
-        return "accountVerified";
-    }
+//    @PostMapping("/registration")
+//    public ResponseEntity<?> registerNewUser(@RequestBody SignUpDto signUpDto) {
+//        userService.registerNewUser(signUpDto);
+//        return ResponseEntity.ok("User is registered successfully!");
+//    }
+//
+//    @GetMapping("/registrationConfirm")
+//    public String confirmRegistration(@RequestParam("token") String token) {
+//        userService.confirmUserRegistration(token);
+//        return "accountVerified";
+//    }
 
 
     @GetMapping("/home")
