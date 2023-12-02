@@ -33,19 +33,24 @@ public class AdminController {
         return "/users";
     }
 
-    @GetMapping("/editUser/{id}")
-    public String getEditUser(@PathVariable("id") Integer id, Model model)
-    {
-        UserModel userModel = userService.findUserById(id);
+    @GetMapping("/{id}") //metoda do przegladania konkretnych profili użytkowników
 
-        model.addAttribute("user", userModel);
+    public String getUser(@PathVariable("id") Integer id, Model model){
+        UserModel user = userService.findUserById(id);
+        model.addAttribute("user",user);
 
-        return "/editUser";
+        return "userProfile";
+    }
+    @PostMapping("/addUser")
+    public RedirectView postAddNewUser(UserModel user){
+        userService.addUser(user);
 
+        return new RedirectView(("/home"));//dodanie użytkownika jest dostępne tylko dla admina
     }
 
+
     @PostMapping("/editUser/{id}")
-    public RedirectView postEditUser(@PathVariable("id") Integer id, UserModel editUser){
+    public RedirectView editUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
         return new RedirectView("/home");
     }
@@ -54,7 +59,7 @@ public class AdminController {
     public RedirectView deleteUser(@PathVariable("id") Integer id)
     {
         userService.deleteUser(id);
-        return  new RedirectView("/user/{id}");
+        return  new RedirectView("/logout");
     }
 
 }
