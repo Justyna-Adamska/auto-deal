@@ -19,6 +19,7 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
+
         return "adminDashboard";
     }
 
@@ -47,13 +48,6 @@ public class AdminController {
         model.addAttribute("user",user);
 
         return "userProfile";
-    }
-    @PostMapping("/addUser")
-    public RedirectView postAddNewUser(UserModel user){
-        userService.addUser(user);
-
-        return new RedirectView(("/home"));//dodanie użytkownika jest dostępne tylko dla admina
-
     }
 
 
