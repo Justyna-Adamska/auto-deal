@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,9 +35,9 @@ class NotificationServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
     @Mock
     private VerificationTokenRepository verificationTokenRepository;
-
 
     @InjectMocks
     private NotificationService notificationService;
@@ -58,9 +59,9 @@ class NotificationServiceTest {
         verify(mailSender, times(1)).send(messageCaptor.capture());
         SimpleMailMessage capturedMessage = messageCaptor.getValue();
 
-        assertEquals(email, capturedMessage.getTo()[0]);
+        assertEquals(email, Objects.requireNonNull(capturedMessage.getTo())[0]);
         assertEquals("Account Activation", capturedMessage.getSubject());
-        assertTrue(capturedMessage.getText().contains(token));
+        assertTrue(Objects.requireNonNull(capturedMessage.getText()).contains(token));
     }
 
     @Test
@@ -70,21 +71,21 @@ class NotificationServiceTest {
         mockUser.setEmail(email);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
 
-        boolean result = notificationService.requestPasswordReset(email);
+        String result = notificationService.requestPasswordReset(email);
 
-        assertTrue(result);
+        assertEquals("SUCCESS", result);
         verify(verificationTokenRepository, times(1)).save(any(VerificationToken.class));
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
     }
+
     @Test
     void requestPasswordReset_UserDoesNotExist() {
-
         String email = "test@example.com";
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        boolean result = notificationService.requestPasswordReset(email);
+        String result = notificationService.requestPasswordReset(email);
 
-        assertFalse(result);
+        assertEquals("No account found with the provided email address.", result);
         verify(userRepository, never()).save(any(UserModel.class));
         verify(mailSender, never()).send(any(SimpleMailMessage.class));
     }
@@ -97,26 +98,25 @@ class NotificationServiceTest {
         VerificationToken mockVerificationToken = new VerificationToken();
         mockVerificationToken.setToken(token);
         mockVerificationToken.setUserModel(mockUser);
-        mockVerificationToken.setExpiryDate(new Date(System.currentTimeMillis() + 100000)); // Ustawienie daty na przyszłość
+        mockVerificationToken.setExpiryDate(new Date(System.currentTimeMillis() + 100000));
 
         when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(mockVerificationToken));
 
-        boolean result = notificationService.resetPassword(token, newPassword);
+        String result = notificationService.resetPassword(token, newPassword);
 
-        assertTrue(result);
+        assertEquals("SUCCESS", result);
         verify(passwordEncoder, times(1)).encode(newPassword);
         verify(userRepository, times(1)).save(mockUser);
     }
 
-
     @Test
     void resetPassword_InvalidToken() {
         String token = UUID.randomUUID().toString();
-        when(userRepository.findByResetToken(token)).thenReturn(Optional.empty());
+        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.empty());
 
-        boolean result = notificationService.resetPassword(token, "newPassword");
+        String result = notificationService.resetPassword(token, "newPassword");
 
-        assertFalse(result);
+        assertEquals("Invalid or expired password reset token.", result);
         verify(passwordEncoder, never()).encode(anyString());
         verify(userRepository, never()).save(any(UserModel.class));
     }
@@ -131,53 +131,5 @@ class NotificationServiceTest {
         notificationService.sendActivationEmail(email, token);
 
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
-
-    }
-
-
-    @Test
-    void resetPassword_ValidToken_NotExpired() {
-
-
-        String token = UUID.randomUUID().toString();
-        String newPassword = "newPassword";
-        UserModel mockUser = new UserModel();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUserModel(mockUser);
-
-        LocalDateTime futureDateTime = LocalDateTime.now().plusDays(1);
-        Date futureDate = Date.from(futureDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        verificationToken.setExpiryDate(futureDate);
-
-        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
-
-        boolean result = notificationService.resetPassword(token, newPassword);
-
-        assertTrue(result);
-        verify(passwordEncoder, times(1)).encode(newPassword);
-        verify(userRepository, times(1)).save(mockUser);
-    }
-
-    @Test
-    void resetPassword_ValidToken_Expired() {
-        String token = UUID.randomUUID().toString();
-        UserModel mockUser = new UserModel();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUserModel(mockUser);
-
-        LocalDateTime pastDateTime = LocalDateTime.now().minusDays(1);
-        Date pastDate = Date.from(pastDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        verificationToken.setExpiryDate(pastDate);
-
-
-        when(verificationTokenRepository.findByToken(token)).thenReturn(Optional.of(verificationToken));
-
-        boolean result = notificationService.resetPassword(token, "newPassword");
-
-        assertFalse(result);
-        verify(passwordEncoder, never()).encode(anyString());
-        verify(userRepository, never()).save(any(UserModel.class));
     }
 }

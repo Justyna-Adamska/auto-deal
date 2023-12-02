@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.UUID;
 @Slf4j
 @Service
@@ -51,29 +52,27 @@ public class NotificationService {
         }
     }
 
-    public boolean requestPasswordReset(String email) {
-        UserModel user = userRepository.findByEmail(email).orElse(null);
-        if (user != null) {
-            String resetToken = UUID.randomUUID().toString();
+    public String requestPasswordReset(String email) {
+        Optional<UserModel> userOptional = userRepository.findByEmail(email);
 
-            LocalDateTime localDateTime = LocalDateTime.now().plus(1, ChronoUnit.DAYS);
-            Date expiryDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-
-            VerificationToken verificationToken = new VerificationToken();
-            verificationToken.setToken(resetToken);
-            verificationToken.setUserModel(user);
-            verificationToken.setExpiryDate(expiryDate);
-            verificationTokenRepository.save(verificationToken);
-
-            sendResetEmail(email, resetToken);
-            return true;
+        if (userOptional.isEmpty()) {
+            return "No account found with the provided email address.";
         }
-        return false;
-    }
 
+        UserModel user = userOptional.get();
+        String resetToken = UUID.randomUUID().toString();
 
-    private String generateResetToken() {
-        return UUID.randomUUID().toString();
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
+        Date expiryDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(resetToken);
+        verificationToken.setUserModel(user);
+        verificationToken.setExpiryDate(expiryDate);
+        verificationTokenRepository.save(verificationToken);
+
+        sendResetEmail(email, resetToken);
+        return "SUCCESS";
     }
 
     private void sendResetEmail(String email, String resetToken) {
@@ -87,18 +86,20 @@ public class NotificationService {
         mailSender.send(message);
     }
 
-    public boolean resetPassword(String token, String newPassword) {
+    public String resetPassword(String token, String newPassword) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token).orElse(null);
-        if (verificationToken != null && verificationToken.getExpiryDate().after(new Date())) {
-            UserModel user = verificationToken.getUserModel();
-            if (user != null) {
-                user.setPassword(passwordEncoder.encode(newPassword));
-                userRepository.save(user);
-                verificationTokenRepository.delete(verificationToken);
-                return true;
-            }
+
+        if (verificationToken == null || verificationToken.getExpiryDate().before(new Date())) {
+            return "Invalid or expired password reset token.";
         }
-        return false;
+
+        UserModel user = verificationToken.getUserModel();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        verificationTokenRepository.delete(verificationToken);
+
+        return "SUCCESS";
     }
+
 
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Successful</title>
+    <script>
+        setTimeout(function() {
+            window.location.href = /*[[@{/home}]]*/ '/home';
+        }, 5000); // Przekierowuje po 5 sekundach na stronę home
+    </script>
+</head>
+<body>
+<h1>Registration Successful!</h1>
+<p>Your account has been created successfully. Redirecting to home page...</p>
+</body>
+</html>
