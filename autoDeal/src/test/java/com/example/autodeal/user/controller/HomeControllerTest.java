@@ -1,93 +1,149 @@
 package com.example.autodeal.user.controller;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
-
 import com.example.autodeal.user.dto.SignUpDto;
+import com.example.autodeal.user.service.NotificationService;
 import com.example.autodeal.user.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-@AutoConfigureMockMvc
-@SpringBootTest
-@RunWith(SpringRunner.class)
-class HomeControllerTest {
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-    private MockMvc mockMvc;
-    private ObjectMapper objectMapper;
+import java.util.Arrays;
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+class HomeControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private NotificationService notificationService;
+
+    @Mock
+    private Model model;
+
+    @Mock
+    private RedirectAttributes redirectAttributes;
+
+    @Mock
+    private Authentication authentication;
 
     @InjectMocks
     private HomeController homeController;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = standaloneSetup(homeController).build();
-        objectMapper = new ObjectMapper();
+        openMocks(this);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+
+    @Test
+    void whenRegistration_thenReturnsRegistrationView() {
+        String viewName = homeController.registration();
+        assertEquals("registration", viewName);
     }
 
     @Test
-    void whenRegisterUser_thenResponseIsOkAndContentIsCorrect() throws Exception {
-        SignUpDto signUpDto = new SignUpDto(); // Populate with test data
-        String signUpDtoJson = objectMapper.writeValueAsString(signUpDto);
+    void whenRegisterNewUser_thenRedirectsAndShowsSuccess() {
+        SignUpDto signUpDto = new SignUpDto();
 
-        mockMvc.perform(post("/registration")
-                        .contentType("application/json")
-                        .content(signUpDtoJson))
-                .andExpect(status().isOk())
-                .andExpect(content().string("User is registered successfully!"));
+        String viewName = homeController.registerNewUser(signUpDto, redirectAttributes);
+
+        assertEquals("redirect:/registration-success", viewName);
+        verify(userService).registerNewUser(signUpDto);
+        verify(redirectAttributes).addFlashAttribute("success", "User is registered successfully!");
     }
 
     @Test
-    void whenConfirmRegistration_thenViewNameIsAccountVerified() throws Exception {
-        mockMvc.perform(get("/registrationConfirm").param("token", "valid-token"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("accountVerified"));
+    void whenConfirmRegistration_thenReturnsAccountVerifiedView() {
+        String token = "token";
+
+        String viewName = homeController.confirmRegistration(token);
+
+        assertEquals("accountVerified", viewName);
+        verify(userService).confirmUserRegistration(token);
     }
 
-//    @Test
-//    @WithMockUser(username = "testUser", roles = {"USER", "ADMIN"})
-//    void whenRequestHomePage_thenViewNameIsHome() throws Exception {
-//        mockMvc.perform(get("/home"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("home"))
-//                .andExpect(model().attributeExists("username"))
-//                .andExpect(model().attributeExists("userRole"));
-//    }
-//    @Test
-//    @WithMockUser
-//    void whenRequestLoginPage_thenViewNameIsLogin() throws Exception {
-//        mockMvc.perform(get("/login"))
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("login"));
-//    }
 
     @Test
-    void whenRequestAdminPage_thenViewNameIsAdmin() throws Exception {
-        mockMvc.perform(get("/admin"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("adminDashboard"));
+    void whenLogin_thenReturnsLoginView() {
+        String viewName = homeController.login();
+        assertEquals("login", viewName);
     }
 
     @Test
-    void whenRequestLogout_thenRedirectToLogin() throws Exception {
-        mockMvc.perform(get("/logout"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
+    void whenAdmin_thenReturnsAdminDashboardView() {
+        String viewName = homeController.admin();
+        assertEquals("adminDashboard", viewName);
     }
+
+    @Test
+    void whenLogout_thenRedirectsToLogin() {
+        String viewName = homeController.logout();
+        assertEquals("redirect:/login", viewName);
+    }
+
+    @Test
+    void whenShowForgotPasswordForm_thenReturnsForgotPasswordView() {
+        String viewName = homeController.showForgotPasswordForm();
+        assertEquals("forgotPassword", viewName);
+    }
+
+    @Test
+    void whenHandleForgotPassword_thenRedirectsAndShowsMessage() {
+        String email = "user@example.com";
+
+        when(notificationService.requestPasswordReset(email)).thenReturn("SUCCESS");
+
+        String viewName = homeController.handleForgotPassword(email, redirectAttributes);
+
+        assertEquals("redirect:/login", viewName);
+        verify(notificationService).requestPasswordReset(email);
+        verify(redirectAttributes).addFlashAttribute("message", "Password reset link has been sent to the provided email address.");
+    }
+
+    @Test
+    void whenHandleResetPassword_thenRedirectsAndShowsMessage() {
+        String token = "token";
+        String password = "password";
+
+        when(notificationService.resetPassword(token, password)).thenReturn("SUCCESS");
+
+        String viewName = homeController.handleResetPassword(token, password, redirectAttributes);
+
+        assertEquals("redirect:/login", viewName);
+        verify(notificationService).resetPassword(token, password);
+        verify(redirectAttributes).addFlashAttribute("message", "Your password has been reset successfully.");
+    }
+    @Test
+    void whenHome_thenReturnsHomeViewWithAttributes() {
+        when(authentication.getName()).thenReturn("testUser");
+
+        Collection authorities = Arrays.asList(
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADMIN")
+        );
+
+        when(authentication.getAuthorities()).thenReturn(authorities);
+
+        String viewName = homeController.home(model);
+
+        assertEquals("home", viewName);
+        verify(model).addAttribute("username", "testUser");
+        verify(model).addAttribute(eq("userRole"), anyString());
+    }
+
 }

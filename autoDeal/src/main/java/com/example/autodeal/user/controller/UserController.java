@@ -22,19 +22,28 @@ public class UserController {
     }
 
 
-    @GetMapping("/user/{id}")
-    public String getUser(@PathVariable("id") Integer id, Model model) {
-        UserModel user = userService.findUserById(id);
-        model.addAttribute("user", user);
-        return "userProfile";
-    }
 
     @PutMapping("/user/{id}")
     public RedirectView postEditUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
-        return new RedirectView("/user/profile"); // Przekierowanie na profil użytkownika,
-        // co daje mu możliwość sprawdzenia edytowanych danych
+
+
+
+        return new RedirectView("/user/profile");//Przekierowanie na profil uzytkownika
+        // aby mógł sprawdzić poprawność edytowanych danych
     }
 
+    @PostMapping("/user/delete/{id}") //mozliwość aby użytkownik mógł skasować swoje konto
+    public RedirectView deleteUserAccount(@PathVariable("id") Integer id) {
+        userService.deleteUser(id);
+        return new RedirectView("/logout");
+    }
+
+//    @GetMapping("/user/{id}") //pobieramy profil użytkownika po własnym id
+//    public String getUser(@PathVariable ("id") Integer id, Model model) {
+//        UserModel user = userService.findUserById(id);
+//        model.addAttribute("user", user);
+//    return "/user/{id}";
+//    }
 
 }

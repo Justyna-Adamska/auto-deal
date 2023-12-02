@@ -30,6 +30,7 @@ public class AdminController {
         return "users";
     }
 
+
     // Szukanie użytkowników
 //    @GetMapping("/search")
 //    public String searchUsers(@RequestParam String query, Model model) {
@@ -38,16 +39,26 @@ public class AdminController {
 //        return "userSearchResults";
 //    }
 
-    // Edycja użytkownika
-    @GetMapping("/editUser/{id}")
-    public String getEditUser(@PathVariable("id") Integer id, Model model) {
-        UserModel userModel = userService.findUserById(id);
-        model.addAttribute("user", userModel);
-        return "editUser";
+
+    @GetMapping("/{id}") //metoda do przegladania konkretnych profili użytkowników
+
+    public String getUser(@PathVariable("id") Integer id, Model model){
+        UserModel user = userService.findUserById(id);
+        model.addAttribute("user",user);
+
+        return "userProfile";
+    }
+    @PostMapping("/addUser")
+    public RedirectView postAddNewUser(UserModel user){
+        userService.addUser(user);
+
+        return new RedirectView(("/home"));//dodanie użytkownika jest dostępne tylko dla admina
+
     }
 
+
     @PostMapping("/editUser/{id}")
-    public RedirectView postEditUser(@PathVariable("id") Integer id, UserModel editUser){
+    public RedirectView editUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
         return new RedirectView("/admin/users");
     }
@@ -64,6 +75,7 @@ public class AdminController {
     public String getAddUser(Model model) {
         model.addAttribute("user", new UserModel());
         return "addUser";
+
     }
 
     @PostMapping("/addUser")

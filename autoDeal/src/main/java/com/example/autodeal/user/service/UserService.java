@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
         newUser.setLastName(signUpDto.getLastName());
         newUser.setPhone(signUpDto.getPhone());
         newUser.setEmail(signUpDto.getEmail());
-        newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword())); // Encode password
+        newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
         UserRole defaultRole = userRoleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default role not found."));
