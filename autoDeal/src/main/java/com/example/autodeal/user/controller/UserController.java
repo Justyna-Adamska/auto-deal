@@ -23,11 +23,12 @@ public class UserController {
 
 
 
-
-
     @PutMapping("/user/{id}")
     public RedirectView postEditUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
+
+
+
         return new RedirectView("/user/profile");//Przekierowanie na profil uzytkownika
         // aby mógł sprawdzić poprawność edytowanych danych
     }
@@ -44,4 +45,5 @@ public class UserController {
 //        model.addAttribute("user", user);
 //    return "/user/{id}";
 //    }
+
 }

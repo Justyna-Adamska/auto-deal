@@ -124,4 +124,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+//    public List<UserModel> searchUsers(String query) {
+//        return userRepository.findBy(query).orElseThrow(()->new RuntimeException("Could not find user by this query"));
+//    }
 }

@@ -5,10 +5,7 @@ import com.example.autodeal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -22,16 +19,26 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-
         return "adminDashboard";
     }
 
+    // Lista wszystkich użytkowników
     @GetMapping("/users")
     public String findAllUsers(Model model){
         List<UserModel> userList = userService.findAllUsers();
-        model.addAttribute("userModel", userList);
-        return "/users";
+        model.addAttribute("users", userList);
+        return "users";
     }
+
+
+    // Szukanie użytkowników
+//    @GetMapping("/search")
+//    public String searchUsers(@RequestParam String query, Model model) {
+//        List<UserModel> searchResults = userService.searchUsers(query);
+//        model.addAttribute("users", searchResults);
+//        return "userSearchResults";
+//    }
+
 
     @GetMapping("/{id}") //metoda do przegladania konkretnych profili użytkowników
 
@@ -46,20 +53,34 @@ public class AdminController {
         userService.addUser(user);
 
         return new RedirectView(("/home"));//dodanie użytkownika jest dostępne tylko dla admina
+
     }
 
 
     @PostMapping("/editUser/{id}")
     public RedirectView editUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
-        return new RedirectView("/home");
+        return new RedirectView("/admin/users");
     }
 
-    @PostMapping("delete/{id}")
-    public RedirectView deleteUser(@PathVariable("id") Integer id)
-    {
+    // Usuwanie użytkownika
+    @PostMapping("/delete/{id}")
+    public RedirectView deleteUser(@PathVariable("id") Integer id) {
         userService.deleteUser(id);
-        return  new RedirectView("/logout");
+        return new RedirectView("/admin/users");
     }
 
+    // Dodawanie nowego użytkownika
+    @GetMapping("/addUser")
+    public String getAddUser(Model model) {
+        model.addAttribute("user", new UserModel());
+        return "addUser";
+
+    }
+
+    @PostMapping("/addUser")
+    public RedirectView postAddUser(UserModel newUser) {
+        userService.addUser(newUser);
+        return new RedirectView("/admin/users");
+    }
 }
