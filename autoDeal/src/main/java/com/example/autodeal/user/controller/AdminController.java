@@ -30,7 +30,7 @@ public class AdminController {
     public String findAllUsers(Model model){
         List<UserModel> userList = userService.findAllUsers();
         model.addAttribute("userModel", userList);
-        return "/users";
+        return "admin/adminUsers";
     }
 
     @GetMapping("/{id}") //metoda do przegladania konkretnych profili użytkowników
@@ -39,7 +39,7 @@ public class AdminController {
         UserModel user = userService.findUserById(id);
         model.addAttribute("user",user);
 
-        return "userProfile";
+        return "admin/userDetails";
     }
     @PostMapping("/addUser")
     public RedirectView postAddNewUser(UserModel user){
