@@ -1,19 +1,13 @@
 package com.example.autodeal.user.controller;
 
 import com.example.autodeal.user.dto.SignUpDto;
-import com.example.autodeal.user.repository.UserRepository;
-import com.example.autodeal.user.repository.UserRoleRepository;
 import com.example.autodeal.user.service.NotificationService;
 import com.example.autodeal.user.service.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +36,7 @@ public class HomeController {
 
     @GetMapping("/registration")
     public String registration() {
-        return "registration";
+        return "home/registration";
     }
     @PostMapping("/registration")
     public String registerNewUser(@RequestBody SignUpDto signUpDto, RedirectAttributes redirectAttributes) {
@@ -52,12 +46,12 @@ public class HomeController {
     }
     @GetMapping("/registration-success")
     public String registrationSuccess() {
-        return "registrationSuccess";
+        return "home/registrationSuccess";
     }
     @GetMapping("/registrationConfirm")
     public String confirmRegistration(@RequestParam("token") String token) {
         userService.confirmUserRegistration(token);
-        return "accountVerified";
+        return "home/accountVerified";
     }
 
 
@@ -77,13 +71,13 @@ public class HomeController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "home/login";
     }
 
 
     @GetMapping("/admin")
     public String admin() {
-        return "adminDashboard";
+        return "admin/adminDashboard";
     }
 
     @GetMapping("/logout")
@@ -93,7 +87,7 @@ public class HomeController {
 
     @GetMapping("/forgot-password")
     public String showForgotPasswordForm() {
-        return "forgotPassword";
+        return "home/forgotPassword";
     }
     @PostMapping("/forgot-password")
     public String handleForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
