@@ -9,12 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -26,35 +28,33 @@ public class ProductController {
         return "products";
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/productsId/{id}")
     public String findProductById(@PathVariable("id")Integer id, ProductModel getProduct){
         productService.findProductById(id);
         return "product/{id}";
     }
 
-    @GetMapping("/products/{color}")
+    @GetMapping("/productsColor/{color}")
     public String findProductByColor(@PathVariable("color")String color, ProductModel getProduct){
         productService.findProductByColor(color);
         return "product/{color}";
     }
 
-    @GetMapping("/products/{carMake}")
+    @GetMapping("/productsMake/{carMake}")
     public String findProductByCarMake(@PathVariable("carMake")String carMake, ProductModel getProduct){
         productService.findProductByCarMake(carMake);
         return "product/{carMake}";
     }
 
-    @GetMapping("/products/{productionYear}")
+    @GetMapping("/productsYear/{productionYear}")
     public String findProductByProductionYear(@PathVariable("productionYear")Integer productionYear, ProductModel getProduct){
         productService.findProductByProductionYear(productionYear);
         return "product/{productionYear}";
     }
 
-    @GetMapping("/products/{type}")
+    @GetMapping("/productsType/{type}")
     public String findProductByType(@PathVariable("type")String type, ProductModel getProduct){
         productService.findProductByType(type);
         return "product/{type}";
     }
-
-
 }
