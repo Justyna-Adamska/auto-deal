@@ -11,7 +11,7 @@ wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bi
 tar -xzvf apache-maven-3.9.6-bin.tar.gz
 #build jar file
 cd ..
-JAVA_HOME=.jdk-21.0.1 ./apache-maven-3.9.6/bin/mvn --file autoDeal/pom.xml clean package
+JAVA_HOME=tmp/jdk-21.0.1/ tmp/apache-maven-3.9.6/bin/mvn --file autoDeal/pom.xml clean package
 #build docker image
 sudo docker build --tag=jjk .
 #run docker image
