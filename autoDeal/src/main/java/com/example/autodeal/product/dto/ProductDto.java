@@ -15,6 +15,8 @@ public class ProductDto {
     private String name;
     private Integer price;
     private String carMake;
+    private Integer mileage;
+    private String origin;
     private String type;
     private Long code;
     private String color;
