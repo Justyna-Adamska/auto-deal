@@ -1,8 +1,11 @@
 package com.example.autodeal.user.controller;
 
 import com.example.autodeal.user.model.UserModel;
+import com.example.autodeal.user.service.NotificationService;
 import com.example.autodeal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +17,17 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
 @RequiredArgsConstructor
+@RequestMapping("/admin")
+@Slf4j
 public class AdminController {
 
     private final UserService userService;
 
+
     @GetMapping("/dashboard")
     public String dashboard() {
-
-        return "adminDashboard";
+        return "admin/adminDashboard";
     }
 
     @GetMapping("/users")

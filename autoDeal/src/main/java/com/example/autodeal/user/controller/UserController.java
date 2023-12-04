@@ -2,13 +2,15 @@ package com.example.autodeal.user.controller;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("/user")
 @RequiredArgsConstructor
+@RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
