@@ -1,15 +1,17 @@
 package com.example.autodeal.order.controller;
 
-import com.example.autodeal.order.model.OrderLineModel;
+import com.example.autodeal.order.dto.OrderLineDTO;
 import com.example.autodeal.order.service.OrderLineService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/orderlines")
 public class OrderLineController {
 
@@ -21,38 +23,42 @@ public class OrderLineController {
     }
 
     @PostMapping
-    // Tworzy nową linię zamówienia
-    public ResponseEntity<OrderLineModel> createOrderLine(@RequestBody OrderLineModel orderLine) {
-        return ResponseEntity.ok(orderLineService.createOrderLine(orderLine));
+    public String createOrderLine(@ModelAttribute OrderLineDTO orderLineDTO, RedirectAttributes redirectAttributes) {
+        OrderLineDTO created = orderLineService.createOrderLine(orderLineDTO);
+        redirectAttributes.addFlashAttribute("success", "Order line created successfully!");
+        return "redirect:/orderlines/" + created.getId();
     }
 
     @GetMapping("/{orderLineId}")
-    // Pobiera linię zamówienia na podstawie jej ID
-    public ResponseEntity<OrderLineModel> getOrderLineById(@PathVariable Integer orderLineId) {
-        Optional<OrderLineModel> orderLine = orderLineService.getOrderLineById(orderLineId);
-        return orderLine.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public String getOrderLineById(@PathVariable Integer orderLineId, Model model) {
+        Optional<OrderLineDTO> orderLineDTO = orderLineService.getOrderLineById(orderLineId);
+        if (orderLineDTO.isPresent()) {
+            model.addAttribute("orderLine", orderLineDTO.get());
+            return "orderLine/orderLineView";
+        } else {
+            return "error/errorView";
+        }
     }
 
-    // Metody dla administratora
-
     @PutMapping("/admin/{orderLineId}")
-    // Aktualizuje linię zamówienia (dostępne tylko dla admina)
-    public ResponseEntity<OrderLineModel> updateOrderLine(@PathVariable Integer orderLineId, @RequestBody OrderLineModel orderLine) {
-        orderLine.setId(orderLineId);
-        return ResponseEntity.ok(orderLineService.updateOrderLine(orderLine));
+    public String updateOrderLine(@PathVariable Integer orderLineId, @ModelAttribute OrderLineDTO orderLineDTO, RedirectAttributes redirectAttributes) {
+        orderLineDTO.setId(orderLineId);
+        OrderLineDTO updated = orderLineService.updateOrderLine(orderLineDTO);
+        redirectAttributes.addFlashAttribute("success", "Order line updated successfully!");
+        return "redirect:/orderlines/admin/" + updated.getId();
     }
 
     @DeleteMapping("/admin/{orderLineId}")
-    // Usuwa linię zamówienia (dostępne tylko dla admina)
-    public ResponseEntity<Void> deleteOrderLine(@PathVariable Integer orderLineId) {
+    public String deleteOrderLine(@PathVariable Integer orderLineId, RedirectAttributes redirectAttributes) {
         orderLineService.deleteOrderLine(orderLineId);
-        return ResponseEntity.ok().build();
+        redirectAttributes.addFlashAttribute("success", "Order line deleted successfully!");
+        return "redirect:/orderlines/admin";
     }
 
     @GetMapping("/admin")
-    // Pobiera wszystkie linie zamówień (dostępne tylko dla admina)
-    public ResponseEntity<List<OrderLineModel>> getAllOrderLines() {
-        return ResponseEntity.ok(orderLineService.getAllOrderLines());
+    public String getAllOrderLines(Model model) {
+        List<OrderLineDTO> allOrderLinesDTO = orderLineService.getAllOrderLines();
+        model.addAttribute("orderLinesList", allOrderLinesDTO);
+        return "admin/allOrderLinesView";
     }
-
 }

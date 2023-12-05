@@ -5,10 +5,11 @@ import com.example.autodeal.exception.UserNotFoundException;
 import com.example.autodeal.user.dto.SignUpDto;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.model.UserRole;
+import com.example.autodeal.user.model.VerificationToken;
 import com.example.autodeal.user.repository.UserRepository;
 import com.example.autodeal.user.repository.UserRoleRepository;
-import com.example.autodeal.user.model.VerificationToken;
 import com.example.autodeal.user.repository.VerificationTokenRepository;
+import com.example.autodeal.user.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,10 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,26 +28,25 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private UserRoleRepository userRoleRepository;
-
     @Mock
     private VerificationTokenRepository verificationTokenRepository;
-
     @Mock
     private PasswordEncoder passwordEncoder;
-
     @Mock
     private NotificationService notificationService;
 
     @InjectMocks
     private UserService userService;
 
+    private UserMapper userMapper;
     private UserModel userModel;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        userMapper = new UserMapper();
 
         UserRole userRoleUser = new UserRole();
         userRoleUser.setName("ROLE_USER");
@@ -61,17 +58,18 @@ public class UserServiceTest {
         userModel.setRoles(Collections.singleton(userRoleUser));
 
         when(userRepository.findByEmail("jan.kot@gmail.com")).thenReturn(Optional.of(userModel));
-
         when(userRepository.findByEmail("notfound@example.com")).thenReturn(Optional.empty());
-
         when(userRepository.findByEmail("newuser@example.com")).thenReturn(Optional.empty());
-
         when(userRepository.save(any(UserModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
         VerificationToken mockToken = new VerificationToken();
         when(verificationTokenRepository.save(any(VerificationToken.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
         when(verificationTokenRepository.findByToken("some-token")).thenReturn(Optional.of(mockToken));
+
+        userService = new UserService(userRepository, userRoleRepository, passwordEncoder, notificationService, verificationTokenRepository, userMapper);
     }
+
 
     @Test
     void whenFindAllUsers_thenReturnsListOfUsers() {
@@ -110,6 +108,7 @@ public class UserServiceTest {
 
         assertThrows(RuntimeException.class, () -> userService.findUserById(99));
     }
+
     @Test
     public void whenAddUser_thenUserIsSaved() {
         UserModel newUser = new UserModel();
@@ -228,5 +227,4 @@ public class UserServiceTest {
 
         assertThrows(RuntimeException.class, () -> userService.confirmUserRegistration("invalid-token"));
     }
-
 }

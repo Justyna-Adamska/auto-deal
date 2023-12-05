@@ -74,9 +74,9 @@ public class AdminController {
 
     }
 
-    @PostMapping("/addUser")
-    public RedirectView postAddUser(UserModel newUser) {
-        userService.addUser(newUser);
-        return new RedirectView("/admin/users");
-    }
+//    @PostMapping("/addUser")
+//    public RedirectView postAddUser(UserModel newUser) {
+//        userService.addUser(newUser);
+//        return new RedirectView("/admin/users");
+//    }
 }
