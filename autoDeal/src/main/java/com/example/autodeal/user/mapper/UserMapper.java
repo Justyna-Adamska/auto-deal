@@ -33,9 +33,15 @@ public class UserMapper {
                 .collect(Collectors.toList());
     }
 
-    public UserModel mapSignUpDtoToUserModel(SignUpDto signUpDto) {
-        if (signUpDto == null) {
-            return null;
+feature/orderDomain/PaymentDetails
+ 
+
+    public static List<UserDto> mapToUserDtoList(List<UserModel> userModels) {
+        List<UserDto> userList = new ArrayList<>();
+        for (UserModel userModel : userModels) {
+            userList.add(mapToUserDto(userModel));
+          
+ main
         }
 
         UserModel userModel = new UserModel();

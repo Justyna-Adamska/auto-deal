@@ -9,3 +9,7 @@ INSERT INTO user_role (name) VALUES ('ROLE_USER');
 
 INSERT INTO user_x_roles VALUES (1,1);
 INSERT INTO user_x_roles VALUES (2,2);
+
+INSERT INTO product (name, price, car_make, mileage, origin, type, code, color, warranty,production_year) VALUES ('Dacia prawie niebita', '10000','Dacia','200000', 'Maroko','VAN', '1234567', 'biały', '1','2019');
+
+INSERT INTO product (name, price, car_make, mileage, origin, type, code, color, warranty,production_year) VALUES ('Passat jak nowy', '5000','Volkswagen','300000', 'Niemcy','SEDAN', '7654321', 'czarny', '0','2016');

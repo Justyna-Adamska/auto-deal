@@ -28,6 +28,12 @@ public class ProductModel {
     private String carMake; //czyli marka samochodu :)
 
     @Column
+    private Integer mileage;
+
+    @Column
+    private String origin;
+
+    @Column
     private String type; //czyli VAN/Combi/Sedan/SUV/Convertible
 
     @Column
