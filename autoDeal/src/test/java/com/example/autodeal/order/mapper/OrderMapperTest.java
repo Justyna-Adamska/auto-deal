@@ -98,7 +98,7 @@ public class OrderMapperTest {
         OrderDTO dto = orderMapper.toOrderDTO(orderModel);
         assertEquals(orderModel.getId(), dto.getId());
         assertEquals(orderModel.getUser().getId(), dto.getUserId());
-        assertEquals(orderModel.getStatus(), dto.getStatus());
+        assertEquals(orderModel.getStatus().name(), dto.getStatus());
         assertEquals(orderModel.getOrderLines().size(), dto.getOrderLines().size());
     }
 
@@ -107,7 +107,7 @@ public class OrderMapperTest {
         OrderModel model = orderMapper.toOrderModel(orderDTO);
         assertEquals(orderDTO.getId(), model.getId());
         assertEquals(orderDTO.getUserId(), model.getUser().getId());
-        assertEquals(orderDTO.getStatus(), model.getStatus());
+        assertEquals(OrderStatus.valueOf(orderDTO.getStatus()), model.getStatus());
         assertEquals(orderDTO.getOrderLines().size(), model.getOrderLines().size());
     }
 
