@@ -1,16 +1,15 @@
 package com.example.autodeal.order.controller;
 
-import com.example.autodeal.order.model.OrderModel;
+import com.example.autodeal.exception.*;
+import com.example.autodeal.order.dto.OrderDTO;
 import com.example.autodeal.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
-@RestController
-@RequestMapping("/orders")
+@Controller
+@RequestMapping("/admin/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -19,41 +18,49 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+    @GetMapping
+    public String listOrders(Model model) {
+        model.addAttribute("orders", orderService.getAllOrders());
+        return "orders/list";
+    }
+
+    @GetMapping("/{id}")
+    public String viewOrder(@PathVariable("id") Integer id, Model model) {
+        OrderDTO order = orderService.getOrderById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+        model.addAttribute("order", order);
+        return "orders/view";
+    }
+
+    @GetMapping("/new")
+    public String newOrderForm(Model model) {
+        model.addAttribute("order", new OrderDTO());
+        return "orders/new";
+    }
 
     @PostMapping
-    // Tworzy nowe zamówienie
-    public ResponseEntity<OrderModel> createOrder(@RequestBody OrderModel order) {
-        return ResponseEntity.ok(orderService.createOrder(order));
+    public String createOrder(@ModelAttribute OrderDTO orderDTO) {
+        orderService.createOrder(orderDTO);
+        return "redirect:/orders";
     }
 
-    @GetMapping("/{orderId}")
-    // Pobiera zamówienie na podstawie jego ID
-    public ResponseEntity<OrderModel> getOrderById(@PathVariable Integer orderId) {
-        Optional<OrderModel> order = orderService.getOrderById(orderId);
-        return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/edit/{id}")
+    public String editOrderForm(@PathVariable("id") Integer id, Model model) {
+        OrderDTO order = orderService.getOrderById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+        model.addAttribute("order", order);
+        return "orders/edit";
     }
 
-    // Metody dla administratora
-
-    @PutMapping("/admin/{orderId}")
-    // Aktualizuje zamówienie (dostępne tylko dla admina)
-    public ResponseEntity<OrderModel> updateOrder(@PathVariable Integer orderId, @RequestBody OrderModel order) {
-        order.setId(orderId);
-        return ResponseEntity.ok(orderService.updateOrder(order));
+    @PostMapping("/{id}")
+    public String updateOrder(@PathVariable("id") Integer id, @ModelAttribute OrderDTO orderDTO) {
+        orderService.updateOrder(orderDTO);
+        return "redirect:/orders";
     }
 
-    @DeleteMapping("/admin/{orderId}")
-    // Usuwa zamówienie (dostępne tylko dla admina)
-    public ResponseEntity<Void> deleteOrder(@PathVariable Integer orderId) {
-        orderService.deleteOrder(orderId);
-        return ResponseEntity.ok().build();
+    @GetMapping("/delete/{id}")
+    public String deleteOrder(@PathVariable("id") Integer id) {
+        orderService.deleteOrder(id);
+        return "redirect:/orders";
     }
-
-    @GetMapping("/admin")
-    // Pobiera wszystkie zamówienia (dostępne tylko dla admina)
-    public ResponseEntity<List<OrderModel>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
-    }
-
 }
-

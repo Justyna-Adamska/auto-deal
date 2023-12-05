@@ -17,9 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.autodeal.user.mapper.UserMapper;
 
 import java.util.*;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -30,19 +30,21 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final NotificationService notificationService;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, NotificationService notificationService, VerificationTokenRepository tokenRepository) {
+    public UserService(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                       PasswordEncoder passwordEncoder, NotificationService notificationService,
+                       VerificationTokenRepository tokenRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
         this.notificationService = notificationService;
         this.verificationTokenRepository = tokenRepository;
+        this.userMapper = userMapper;
     }
 
-
     public void addUser(UserModel user) {
-
         userRepository.save(user);
     }
 
@@ -51,7 +53,7 @@ public class UserService implements UserDetailsService {
     }
 
     public UserModel findUserById(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Could not find user by id"));
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Could not find user by id"));
     }
 
     public UserModel findUserByEmail(String email) {
@@ -72,10 +74,6 @@ public class UserService implements UserDetailsService {
         UserModel user = findUserByEmail(email);
         Boolean isActivated = Optional.ofNullable(user.getEnabled()).orElse(false);
 
-        // if (!isActivated) {
-        //   throw new UsernameNotFoundException("User not activated");
-        //}
-
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toSet());
@@ -84,16 +82,11 @@ public class UserService implements UserDetailsService {
     }
 
     public UserModel registerNewUser(SignUpDto signUpDto) {
-
         userRepository.findByEmail(signUpDto.getEmail()).ifPresent(u -> {
             throw new UserAlreadyExistsException("Registration failed, please try again.");
         });
 
-        UserModel newUser = new UserModel();
-        newUser.setFirstName(signUpDto.getFirstName());
-        newUser.setLastName(signUpDto.getLastName());
-        newUser.setPhone(signUpDto.getPhone());
-        newUser.setEmail(signUpDto.getEmail());
+        UserModel newUser = userMapper.mapSignUpDtoToUserModel(signUpDto);
         newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
         UserRole defaultRole = userRoleRepository.findByName("ROLE_USER")
@@ -114,7 +107,6 @@ public class UserService implements UserDetailsService {
         return savedUser;
     }
 
-
     public void confirmUserRegistration(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid token"));
@@ -123,8 +115,4 @@ public class UserService implements UserDetailsService {
         user.setEnabled(true);
         userRepository.save(user);
     }
-
-//    public List<UserModel> searchUsers(String query) {
-//        return userRepository.findBy(query).orElseThrow(()->new RuntimeException("Could not find user by this query"));
-//    }
 }

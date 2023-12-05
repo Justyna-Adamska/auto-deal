@@ -115,8 +115,4 @@ public class HomeController {
             return "redirect:/reset-password?token=" + token;
         }
     }
-
-
-
-
 }

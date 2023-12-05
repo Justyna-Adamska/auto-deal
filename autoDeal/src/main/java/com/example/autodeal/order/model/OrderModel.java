@@ -3,6 +3,8 @@ package com.example.autodeal.order.model;
 import com.example.autodeal.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -25,17 +27,22 @@ public class OrderModel {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderLineModel> orderLines;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private OrderStatus status;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private PaymentDetailsModel paymentDetails;
 
     public OrderModel() {
         super();
     }
 
-    // Metoda do obliczania całkowitej wartości zamówienia
-    public double calculateTotalPrice() {
-        return orderLines.stream()
-                .mapToDouble(OrderLineModel::getTotalPrice)
-                .sum();
+    public BigDecimal getTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (OrderLineModel line : orderLines) {
+            total = total.add(line.getTotalPrice());
+        }
+        return total;
     }
 }

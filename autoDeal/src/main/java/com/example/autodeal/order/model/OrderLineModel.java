@@ -2,6 +2,8 @@ package com.example.autodeal.order.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @Table(name = "order_line")
@@ -22,24 +24,26 @@ public class OrderLineModel {
     private Integer quantity;
 
     @Column(name = "unitPrice", nullable = false)
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     @Column(name = "totalPrice", nullable = false)
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     @Column(name = "discount")
-    private Double discount;
+    private BigDecimal discount;
 
     public OrderLineModel() {
         super();
     }
 
-    // Metoda do obliczania całkowitej ceny dla OrderLine
-    public double calculateLineTotal() {
+
+    public BigDecimal calculateLineTotal() {
+        BigDecimal quantityAsBigDecimal = BigDecimal.valueOf(quantity);
+
         if (discount != null) {
-            return (unitPrice * quantity) - discount;
+            return unitPrice.multiply(quantityAsBigDecimal).subtract(discount);
         } else {
-            return unitPrice * quantity;
+            return unitPrice.multiply(quantityAsBigDecimal);
         }
     }
 
