@@ -41,7 +41,7 @@ public class UserRegistrationAndLoginIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        SimpleMailMessage dummyMail = new SimpleMailMessage();
+       // SimpleMailMessage dummyMail = new SimpleMailMessage();
         doNothing().when(mailSender).send(any(SimpleMailMessage.class));
     }
 
