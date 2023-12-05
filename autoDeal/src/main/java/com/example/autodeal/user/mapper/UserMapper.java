@@ -21,6 +21,7 @@ public class UserMapper {
                 .build();
     }
 
+
     public static List<UserDto> mapToUserDtoList(List<UserModel> userModels) {
         List<UserDto> userList = new ArrayList<>();
         for (UserModel userModel : userModels) {

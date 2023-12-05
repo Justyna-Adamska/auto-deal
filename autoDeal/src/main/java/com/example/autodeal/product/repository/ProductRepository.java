@@ -1,5 +1,6 @@
 package com.example.autodeal.product.repository;
 
+import com.example.autodeal.product.enums.ProductType;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.user.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;

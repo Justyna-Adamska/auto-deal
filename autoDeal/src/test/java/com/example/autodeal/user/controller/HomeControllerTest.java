@@ -53,7 +53,7 @@ class HomeControllerTest {
     @Test
     void whenRegistration_thenReturnsRegistrationView() {
         String viewName = homeController.registration();
-        assertEquals("registration", viewName);
+        assertEquals("home/registration", viewName);
     }
 
     @Test
@@ -73,7 +73,7 @@ class HomeControllerTest {
 
         String viewName = homeController.confirmRegistration(token);
 
-        assertEquals("accountVerified", viewName);
+        assertEquals("home/accountVerified", viewName);
         verify(userService).confirmUserRegistration(token);
     }
 
@@ -81,13 +81,13 @@ class HomeControllerTest {
     @Test
     void whenLogin_thenReturnsLoginView() {
         String viewName = homeController.login();
-        assertEquals("login", viewName);
+        assertEquals("home/login", viewName);
     }
 
     @Test
     void whenAdmin_thenReturnsAdminDashboardView() {
         String viewName = homeController.admin();
-        assertEquals("adminDashboard", viewName);
+        assertEquals("admin/adminDashboard", viewName);
     }
 
     @Test
@@ -99,7 +99,7 @@ class HomeControllerTest {
     @Test
     void whenShowForgotPasswordForm_thenReturnsForgotPasswordView() {
         String viewName = homeController.showForgotPasswordForm();
-        assertEquals("forgotPassword", viewName);
+        assertEquals("home/forgotPassword", viewName);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package com.example.autodeal.product.service;
 
+import com.example.autodeal.order.model.OrderModel;
+import com.example.autodeal.product.enums.ProductType;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.product.repository.ProductRepository;
 import com.example.autodeal.user.model.UserModel;
@@ -25,8 +27,8 @@ public class ProductService {
     }
 
 
-    public void addProduct(ProductModel product){
-        productRepository.save(product);
+    public ProductModel addProduct(ProductModel product){
+        return productRepository.save(product);
     }
 
 
@@ -43,7 +45,15 @@ public class ProductService {
         return productRepository.findByProductionYear(productionYear);
     }
 
-    public List<ProductModel> findProductByType(String type) {
-        return productRepository.findByType(type);
+    public List<ProductModel> findProductByType(ProductType type) {
+        return productRepository.findByType(type.toString());
+    }
+
+    public void deleteProduct(Integer productId) {
+        productRepository.deleteById(productId);
+    }
+
+    public ProductModel updateProduct(ProductModel product) {
+        return productRepository.save(product);
     }
 }

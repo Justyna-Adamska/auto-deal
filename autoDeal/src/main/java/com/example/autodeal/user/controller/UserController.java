@@ -12,33 +12,26 @@ import org.springframework.web.servlet.view.RedirectView;
 public class UserController {
 
     private final UserService userService;
-
+//wyświetlanie własnego profilu użytkownika
     @GetMapping("/profile")
     public String userProfile() {
         return "user/userProfile";
     }
 
 
-
-
-
+//możliwość edycji własnych danych przez użytkownika
     @PutMapping("/user/{id}")
     public RedirectView postEditUser(@PathVariable("id") Integer id, UserModel editUser){
         userService.saveEditUser(editUser);
-        return new RedirectView("/user/profile");//Przekierowanie na profil uzytkownika
+        return new RedirectView("/userProfile");//Przekierowanie na profil uzytkownika
         // aby mógł sprawdzić poprawność edytowanych danych
     }
-
-    @PostMapping("/user/delete/{id}") //mozliwość aby użytkownik mógł skasować swoje konto
+    //mozliwość aby użytkownik mógł skasować swoje konto
+    @PostMapping("/user/delete/{id}")
     public RedirectView deleteUserAccount(@PathVariable("id") Integer id) {
         userService.deleteUser(id);
         return new RedirectView("/logout");
     }
 
-//    @GetMapping("/user/{id}") //pobieramy profil użytkownika po własnym id
-//    public String getUser(@PathVariable ("id") Integer id, Model model) {
-//        UserModel user = userService.findUserById(id);
-//        model.addAttribute("user", user);
-//    return "/user/{id}";
-//    }
+
 }
