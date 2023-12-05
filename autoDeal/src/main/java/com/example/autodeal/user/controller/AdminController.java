@@ -27,8 +27,10 @@ public class AdminController {
     @GetMapping("/users")
     public String findAllUsers(Model model){
         List<UserModel> userList = userService.findAllUsers();
-        model.addAttribute("users", userList);
-        return "users";
+
+        model.addAttribute("userModel", userList);
+        return "admin/adminUsers";
+
     }
 
 
@@ -47,7 +49,7 @@ public class AdminController {
         UserModel user = userService.findUserById(id);
         model.addAttribute("user",user);
 
-        return "userProfile";
+        return "admin/userDetails";
     }
 
 
