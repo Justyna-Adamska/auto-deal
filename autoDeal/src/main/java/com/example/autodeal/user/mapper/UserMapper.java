@@ -5,6 +5,7 @@ import com.example.autodeal.user.dto.UserDto;
 import com.example.autodeal.user.model.UserModel;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,20 +29,19 @@ public class UserMapper {
     }
 
     public List<UserDto> mapToUserDtoList(List<UserModel> userModels) {
-        return userModels == null ? null : userModels.stream()
-                .map(this::mapToUserDto)
-                .collect(Collectors.toList());
+        if (userModels == null) {
+            return null;
+        }
+        List<UserDto> userDtos = new ArrayList<>();
+        for (UserModel userModel : userModels) {
+            userDtos.add(mapToUserDto(userModel));
+        }
+        return userDtos;
     }
 
-feature/orderDomain/PaymentDetails
- 
-
-    public static List<UserDto> mapToUserDtoList(List<UserModel> userModels) {
-        List<UserDto> userList = new ArrayList<>();
-        for (UserModel userModel : userModels) {
-            userList.add(mapToUserDto(userModel));
-          
- main
+    public UserModel mapSignUpDtoToUserModel(SignUpDto signUpDto) {
+        if (signUpDto == null) {
+            return null;
         }
 
         UserModel userModel = new UserModel();
@@ -49,7 +49,6 @@ feature/orderDomain/PaymentDetails
         userModel.setLastName(signUpDto.getLastName());
         userModel.setEmail(signUpDto.getEmail());
         userModel.setPhone(signUpDto.getPhone());
-
 
         return userModel;
     }
@@ -71,7 +70,10 @@ feature/orderDomain/PaymentDetails
     }
 
     public List<UserModel> mapToUserModelList(List<UserDto> userDtos) {
-        return userDtos == null ? null : userDtos.stream()
+        if (userDtos == null) {
+            return null;
+        }
+        return userDtos.stream()
                 .map(this::mapToUserModel)
                 .collect(Collectors.toList());
     }
