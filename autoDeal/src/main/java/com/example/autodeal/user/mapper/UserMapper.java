@@ -43,7 +43,7 @@ public class UserMapper {
         userModel.setLastName(signUpDto.getLastName());
         userModel.setEmail(signUpDto.getEmail());
         userModel.setPhone(signUpDto.getPhone());
-        // Remember to handle password encryption elsewhere as needed
+
 
         return userModel;
     }
@@ -60,7 +60,6 @@ public class UserMapper {
         userModel.setEmail(userDto.getEmail());
         userModel.setPhone(userDto.getPhone());
         userModel.setLastLoginDate(userDto.getLastLoginDate());
-        // Handle additional fields like enabled, roles etc. as needed
 
         return userModel;
     }
