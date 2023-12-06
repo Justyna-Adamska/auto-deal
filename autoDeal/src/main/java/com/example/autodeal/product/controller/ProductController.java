@@ -58,7 +58,7 @@ public class ProductController {
     //Dodawanie nowego produktu
     @PostMapping("/admin/addProduct")
     public ResponseEntity<ProductModel> addNewProduct(@RequestBody ProductModel product){
-
+        System.out.println("\n\n\nadd new product\n\n\n");
         return ResponseEntity.ok(productService.addProduct(product));
     }
 
