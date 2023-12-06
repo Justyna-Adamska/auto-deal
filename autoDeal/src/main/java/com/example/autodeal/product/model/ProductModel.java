@@ -1,13 +1,17 @@
 package com.example.autodeal.product.model;
 
+import com.example.autodeal.product.enums.ProductType;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name= "product")
 public class ProductModel {
 
@@ -34,7 +38,8 @@ public class ProductModel {
     private String origin;
 
     @Column
-    private String type; //czyli VAN/Combi/Sedan/SUV/Convertible
+    @Enumerated(EnumType.STRING)
+    private ProductType type; //czyli VAN/Combi/Sedan/SUV/Convertible
 
     @Column
     private Long code;

@@ -1,7 +1,9 @@
 package com.example.autodeal.product.controller;
 
 import com.example.autodeal.order.model.OrderModel;
+import com.example.autodeal.product.dto.ProductDto;
 import com.example.autodeal.product.enums.ProductType;
+import com.example.autodeal.product.mapper.ProductMapper;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.product.service.ProductService;
 import com.example.autodeal.user.model.UserModel;
@@ -25,8 +27,9 @@ public class ProductController {
 
 //getting product by id
     @GetMapping("/id/{productId}")
-    public ResponseEntity<ProductModel> findProductById(@PathVariable("productId")Integer id){
-        return ResponseEntity.ok(productService.findProductById(id));
+    public ResponseEntity<ProductDto> findProductById(@PathVariable("productId")Integer id){
+        ProductModel productModel = productService.findProductById(id);
+        return ResponseEntity.ok(ProductMapper.mapToProductDto(productModel));
     }
 
     @GetMapping("/color/{color}")
@@ -57,9 +60,10 @@ public class ProductController {
 
     //Dodawanie nowego produktu
     @PostMapping("/admin/addProduct")
-    public ResponseEntity<ProductModel> addNewProduct(@RequestBody ProductModel product){
-        System.out.println("\n\n\nadd new product\n\n\n");
-        return ResponseEntity.ok(productService.addProduct(product));
+    public ResponseEntity<ProductDto> addNewProduct(@RequestBody ProductDto product){
+     ProductModel productModel = ProductMapper.mapToProductModel(product);
+       productModel = productService.addProduct(productModel);
+        return ResponseEntity.ok(ProductMapper.mapToProductDto(productModel));
     }
 
     //Zmiana produktu(aktualizacja)

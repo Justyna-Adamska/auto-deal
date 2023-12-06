@@ -35,4 +35,21 @@ public class ProductMapper {
         return productList;
 
     }
+
+    public static ProductModel mapToProductModel(ProductDto productDto) {
+        return ProductModel.builder()
+                .id(productDto.getId())
+                .name(productDto.getName())
+                .price(productDto.getPrice())
+                .carMake(productDto.getCarMake())
+                .mileage(productDto.getMileage())
+                .origin(productDto.getOrigin())
+                .type(productDto.getType())
+                .code(productDto.getCode())
+                .color(productDto.getColor())
+                .warranty(productDto.getWarranty())
+                .productionYear(productDto.getProductionYear())
+                .build();
+    }
+
 }

@@ -14,7 +14,7 @@ public interface ProductRepository extends JpaRepository<ProductModel, Integer> 
     List<ProductModel> findByColor(String color);
     List<ProductModel> findByCarMake(String carMake);
     List<ProductModel> findByProductionYear(Integer productionYear);
-    List<ProductModel> findByType(String Type);
+    List<ProductModel> findByType(ProductType type);
 
 
 }

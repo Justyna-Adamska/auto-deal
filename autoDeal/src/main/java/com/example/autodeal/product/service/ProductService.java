@@ -46,7 +46,7 @@ public class ProductService {
     }
 
     public List<ProductModel> findProductByType(ProductType type) {
-        return productRepository.findByType(type.toString());
+        return productRepository.findByType(type);
     }
 
     public void deleteProduct(Integer productId) {

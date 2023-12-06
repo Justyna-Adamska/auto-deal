@@ -1,5 +1,6 @@
 package com.example.autodeal.product.dto;
 
+import com.example.autodeal.product.enums.ProductType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,7 +18,7 @@ public class ProductDto {
     private String carMake;
     private Integer mileage;
     private String origin;
-    private String type;
+    private ProductType type;
     private Long code;
     private String color;
     private Integer warranty;
