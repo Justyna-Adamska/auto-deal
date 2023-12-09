@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,11 +60,12 @@ class HomeControllerTest {
     @Test
     void whenRegisterNewUser_thenRedirectsAndShowsSuccess() {
         SignUpDto signUpDto = new SignUpDto();
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        String viewName = homeController.registerNewUser(signUpDto, redirectAttributes);
+        String viewName = homeController.registerNewUser(signUpDto, response, redirectAttributes);
 
         assertEquals("redirect:/registration-success", viewName);
-        verify(userService).registerNewUser(signUpDto);
+        verify(userService).registerNewUser(signUpDto, response);
         verify(redirectAttributes).addFlashAttribute("success", "User is registered successfully!");
     }
 

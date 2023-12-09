@@ -10,45 +10,66 @@
     <div class="container-fluid">
         <a class="navbar-brand">Auto-Deal</a>
         <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false"
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Tutaj możesz dodać linki do nawigacji jeśli są potrzebne -->
+        </div>
     </div>
 </nav>
-<br />
-<br />
-<div class="container">
+
+<div class="container mt-4">
     <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="text-center">Witaj na panelu administratora!</h2>
-                </div>
-                <div class="card-body">
-                    <form method="post" th:action="@{/editUser}" class="form-horizontal">
-                        <div class="form-group mb-3">
-                            <label class="control-label"> Username</label>
-                            <label for="username"></label><input type="text" id="username" name="username" class="form-control" placeholder="Username" />
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="control-label"> Email</label>
-                            <label for="email"></label><input type="email" id="email" name="email" class="form-control" placeholder="Email" />
-                        </div>
-                        <div class="form-group mb-3">
-                            <button type="submit" class="btn btn-primary">See all users</button>
-                            <button type="submit" class="btn btn-danger">See all orders</button>
-                            <button type="submit" class="btn btn-secondary">See all products</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-footer text-center">
-                    <p><a th:href="@{/logout}" class="link-primary">Logout</a></p>
-                </div>
+        <div class="col-md-3">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cars</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Orders</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h1 class="h2">Cars Inventory</h1>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Car Make</th>
+                        <th>Mileage</th>
+                        <th>Origin</th>
+                        <th>Type</th>
+                        <th>Code</th>
+                        <th>Color</th>
+                        <th>Warranty</th>
+                        <th>Production Year</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Tutaj dynamicznie załaduj dane o samochodach -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

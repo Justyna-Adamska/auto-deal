@@ -1,10 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Auto-Deal Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand">Auto-Deal</a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Tutaj możesz dodać linki do nawigacji jeśli są potrzebne -->
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Boczne menu -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" id="loadDashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="loadUsers">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="loadCars">Cars</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="loadOrders">Orders</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Główna zawartość -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div id="content">
+            <h1 class="h2">Cars Inventory</h1>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Car Make</th>
+                        <th>Mileage</th>
+                        <th>Origin</th>
+                        <th>Type</th>
+                        <th>Code</th>
+                        <th>Color</th>
+                        <th>Warranty</th>
+                        <th>Production Year</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Tutaj dynamicznie załaduj dane o samochodach -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#loadUsers').click(function(e) {
+            e.preventDefault();
+            loadContent('users'); // Załóżmy, że 'users' to ścieżka do endpointu użytkowników
+        });
+
+        $('#loadCars').click(function(e) {
+            e.preventDefault();
+            loadContent('cars'); // Analogicznie dla samochodów
+        });
+
+        $('#loadOrders').click(function(e) {
+            e.preventDefault();
+            loadContent('orders'); // I dla zamówień
+        });
+
+        function loadContent(path) {
+            $.ajax({
+                url: '/' + path, // Twój endpoint (np. http://example.com/users)
+                type: 'GET',
+                success: function(response) {
+                    // Wstaw odpowiedź do kontenera 'content'
+                    $('#content').html(response);
+                }
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

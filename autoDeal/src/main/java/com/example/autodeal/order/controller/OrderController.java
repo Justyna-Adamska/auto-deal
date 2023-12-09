@@ -63,4 +63,11 @@ public class OrderController {
         orderService.deleteOrder(id);
         return "redirect:/orders";
     }
+
+    @GetMapping("/listFragment")
+    public String listOrdersFragment(Model model) {
+        model.addAttribute("orders", orderService.getAllOrders());
+        return "orders/list :: ordersListFragment"; // Zwróć tylko fragment strony z listą zamówień
+    }
+
 }

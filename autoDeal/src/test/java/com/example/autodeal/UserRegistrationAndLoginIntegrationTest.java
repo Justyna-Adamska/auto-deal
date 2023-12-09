@@ -16,6 +16,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import jakarta.servlet.http.HttpServletResponse;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,9 +41,12 @@ public class UserRegistrationAndLoginIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @MockBean
+    private HttpServletResponse response;
+
     @BeforeEach
     public void setup() {
-       // SimpleMailMessage dummyMail = new SimpleMailMessage();
+
         doNothing().when(mailSender).send(any(SimpleMailMessage.class));
     }
 
@@ -61,7 +66,7 @@ public class UserRegistrationAndLoginIntegrationTest {
         signUpDto.setLastName("User");
         signUpDto.setPhone("123-456-7890");
 
-        UserModel savedUser = userService.registerNewUser(signUpDto);
+        UserModel savedUser = userService.registerNewUser(signUpDto, response);
         assertNotNull(savedUser);
         assertFalse(savedUser.getEnabled());
 
