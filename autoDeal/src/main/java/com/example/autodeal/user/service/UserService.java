@@ -9,6 +9,8 @@ import com.example.autodeal.user.model.VerificationToken;
 import com.example.autodeal.user.repository.UserRepository;
 import com.example.autodeal.user.repository.UserRoleRepository;
 import com.example.autodeal.user.repository.VerificationTokenRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -81,7 +83,7 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 
-    public UserModel registerNewUser(SignUpDto signUpDto) {
+    public UserModel registerNewUser(SignUpDto signUpDto, HttpServletResponse response) {
         userRepository.findByEmail(signUpDto.getEmail()).ifPresent(u -> {
             throw new UserAlreadyExistsException("Registration failed, please try again.");
         });
@@ -103,9 +105,20 @@ public class UserService implements UserDetailsService {
         verificationTokenRepository.save(verificationToken);
 
         notificationService.sendActivationEmail(newUser.getEmail(), activationToken);
+        createAndAddSessionCookie(response);
 
         return savedUser;
     }
+
+    private void createAndAddSessionCookie(HttpServletResponse response) {
+        String sessionId = UUID.randomUUID().toString();
+        Cookie sessionCookie = new Cookie("session-id", sessionId);
+        sessionCookie.setMaxAge(7 * 24 * 60 * 60); // Ciasteczko ważne przez 7 dni
+        sessionCookie.setHttpOnly(true); // Zabezpieczenie przed dostępem przez JavaScript
+        sessionCookie.setPath("/"); // Dostępne dla całej domeny
+        response.addCookie(sessionCookie);
+    }
+
 
     public void confirmUserRegistration(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token)

@@ -166,4 +166,9 @@ public class OrderService {
         paymentDetails.setPaymentMethod(PaymentType.DEPOSIT); // Ustawienie typu płatności
         return paymentDetails;
     }
+
+    public OrderModel getLastOrderOfUser(Integer userId) {
+        return orderRepository.findTopByUserIdOrderByOrderDateDesc(userId)
+                .orElseThrow(() -> new OrderNotFoundException("No orders found for user with ID: " + userId));
+    }
 }

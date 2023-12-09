@@ -33,5 +33,4 @@ public class UserController {
         return new RedirectView("/logout");
     }
 
-
 }

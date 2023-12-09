@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -148,24 +149,28 @@ public class UserServiceTest {
     }
 
     @Test
-    public void whenRegisterNewUser_thenUserIsSaved() {
+    public void whenRegisterNewUser_thenUserIsSavedAndCookieIsCreated() {
         SignUpDto signUpDto = new SignUpDto();
         signUpDto.setEmail("newuser@example.com");
         signUpDto.setPassword("password");
 
-        UserModel registeredUser = userService.registerNewUser(signUpDto);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        UserModel registeredUser = userService.registerNewUser(signUpDto, response);
 
         assertNotNull(registeredUser);
         verify(userRepository, times(1)).save(any(UserModel.class));
+        assertEquals("session-id", response.getCookies()[0].getName());
     }
 
     @Test
     public void whenRegisterExistingUser_thenThrowUserAlreadyExistsException() {
         SignUpDto signUpDto = new SignUpDto();
         signUpDto.setEmail("jan.kot@gmail.com");
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
         assertThrows(UserAlreadyExistsException.class, () -> {
-            userService.registerNewUser(signUpDto);
+            userService.registerNewUser(signUpDto, response);
         });
     }
 
