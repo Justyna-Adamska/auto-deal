@@ -20,7 +20,7 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String dashboard() {
 
-        return "adminDashboard";
+        return "admin/adminDashboard";
     }
 
     // Lista wszystkich użytkowników

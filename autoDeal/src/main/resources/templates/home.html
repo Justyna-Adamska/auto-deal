@@ -43,24 +43,24 @@
 </nav>
 <div class="container mt-4">
     <h4>Now you can</h4>
-<!--    <p>Spring Security Thymeleaf tutorial</p>-->
+    <!--    <p>Spring Security Thymeleaf tutorial</p>-->
     <div sec:authorize="hasRole('USER')">
-        <p><button type="button" class="btn btn-success">Go to your profile</button></p>
+        <a href="/userProfile" th:href="@{/user/profile}" class="btn btn-success">Go to your profile</a>
     </div>
 
     <div sec:authorize="hasRole('ADMIN')">
-        <p><button type="button" class="btn btn-danger">Go to dashboard</button></p>
+        <a href="/adminDashboard" th:href="@{/admin/dashboard}" class="btn btn-success">Go to dashboard</a>
     </div>
 
-    <h4>Or</h4>
-    <div>
-    <p><button type="button" class="btn btn-success">Go to main page</button></p>
-    </div>
-<!--    <div sec:authorize="isAuthenticated()"> Text visible only to authenticated users.</div>-->
-<!--    Authenticated username:-->
-<!--    <div sec:authentication="name"></div>-->
-<!--    Authenticated user roles:-->
-<!--    <span sec:authentication="authorities"></span>-->
+    <!--    <h4>Or</h4>-->
+    <!--    <div>-->
+    <!--    <p><button type="button" class="btn btn-success">Go to main page</button></p>-->
+    <!--    </div>-->
+    <!--    <div sec:authorize="isAuthenticated()"> Text visible only to authenticated users.</div>-->
+    <!--    Authenticated username:-->
+    <!--    <div sec:authentication="name"></div>-->
+    <!--    Authenticated user roles:-->
+    <!--    <span sec:authentication="authorities"></span>-->
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
