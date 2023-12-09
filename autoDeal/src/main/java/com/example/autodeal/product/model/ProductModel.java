@@ -29,7 +29,7 @@ public class ProductModel {
     private Integer price;
 
     @Column
-    private String carMake; //czyli marka samochodu :)
+    private String carMake;
 
     @Column
     private Integer mileage;

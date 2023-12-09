@@ -25,53 +25,54 @@ public class ProductController {
 
     private final ProductService productService;
 
-//getting product by id
+    //getting product by id
     @GetMapping("/id/{productId}")
-    public ResponseEntity<ProductDto> findProductById(@PathVariable("productId")Integer id){
+    public ResponseEntity<ProductDto> findProductById(@PathVariable("productId") Integer id) {
         ProductModel productModel = productService.findProductById(id);
         return ResponseEntity.ok(ProductMapper.mapToProductDto(productModel));
     }
 
     @GetMapping("/color/{color}")
-    public ResponseEntity<List<ProductModel>> findProductByColor(@PathVariable("color")String color){
-
-        return ResponseEntity.ok(productService.findProductByColor(color));
+    public ResponseEntity<List<ProductDto>> findProductByColor(@PathVariable("color") String color) {
+        List<ProductModel> productModels = productService.findProductByColor(color);
+        return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
     }
 
     @GetMapping("/carmake/{carMake}")
-    public ResponseEntity<List<ProductModel>> findProductByCarMake(@PathVariable("carMake")String carMake){
-
-        return ResponseEntity.ok(productService.findProductByCarMake(carMake));
+    public ResponseEntity<List<ProductDto>> findProductByCarMake(@PathVariable("carMake") String carMake) {
+        List<ProductModel> productModels = productService.findProductByCarMake(carMake);
+        return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
     }
 
     @GetMapping("/year/{productionYear}")
-    public ResponseEntity<List<ProductModel>> findProductByProductionYear(@PathVariable("productionYear")Integer productionYear, ProductModel getProduct){
-
-        return ResponseEntity.ok(productService.findProductByProductionYear(productionYear));
+    public ResponseEntity<List<ProductDto>> findProductByProductionYear(@PathVariable("productionYear") Integer productionYear, ProductModel getProduct) {
+        List<ProductModel> productModels = productService.findProductByProductionYear(productionYear);
+        return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
     }
 
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<ProductModel>> findProductByType(@PathVariable("type")ProductType type){
-
-        return ResponseEntity.ok(productService.findProductByType(type));
+    public ResponseEntity<List<ProductDto>> findProductByType(@PathVariable("type") ProductType type) {
+        List<ProductModel> productModels = productService.findProductByType(type);
+        return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
     }
 
     //Metody dla admina
 
     //Dodawanie nowego produktu
     @PostMapping("/admin/addProduct")
-    public ResponseEntity<ProductDto> addNewProduct(@RequestBody ProductDto product){
-     ProductModel productModel = ProductMapper.mapToProductModel(product);
-       productModel = productService.addProduct(productModel);
+    public ResponseEntity<ProductDto> addNewProduct(@RequestBody ProductDto product) {
+        ProductModel productModel = ProductMapper.mapToProductModel(product);
+        productModel = productService.addProduct(productModel);
         return ResponseEntity.ok(ProductMapper.mapToProductDto(productModel));
     }
 
     //Zmiana produktu(aktualizacja)
     @PutMapping("/admin/{productId}")
 
-    public ResponseEntity<ProductModel> updateOrder(@PathVariable Integer productId, @RequestBody ProductModel product){
-        product.setId(productId);
-        return ResponseEntity.ok(productService.updateProduct(product));
+    public ResponseEntity<ProductDto> updateOrder(@PathVariable("productId") Integer productId, @RequestBody ProductDto product) {
+        ProductModel productModel = ProductMapper.mapToProductModel(product);
+        productModel = productService.updateProduct(productModel);
+        return ResponseEntity.ok(ProductMapper.mapToProductDto(productModel));
     }
 
     @DeleteMapping("/admin/{productId}")
@@ -83,9 +84,9 @@ public class ProductController {
 
     //getting all products
     @GetMapping("/admin/products")
-    public ResponseEntity<List<ProductModel>> showProducts(){
-
-        return ResponseEntity.ok(productService.findAllProducts());
+    public ResponseEntity<List<ProductDto>> showProducts() {
+        List<ProductModel> productModels = productService.findAllProducts();
+        return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
     }
 
 }
