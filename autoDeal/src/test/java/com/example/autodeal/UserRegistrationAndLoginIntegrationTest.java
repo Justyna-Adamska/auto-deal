@@ -6,6 +6,8 @@ import com.example.autodeal.user.model.VerificationToken;
 import com.example.autodeal.user.repository.UserRepository;
 import com.example.autodeal.user.repository.VerificationTokenRepository;
 import com.example.autodeal.user.service.UserService;
+import jakarta.persistence.EntityManager;
+import org.h2.tools.Server;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +18,20 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+//@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = )
+//@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/delete-test-data.sql"})
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserRegistrationAndLoginIntegrationTest {
 
     @Autowired
@@ -50,6 +60,14 @@ public class UserRegistrationAndLoginIntegrationTest {
         verificationTokenRepository.deleteAll();
         userRepository.deleteAll();
     }
+
+//    @AfterEach
+//    public void tearDown(@Autowired EntityManager entityManager, @Autowired Connection connection, @Autowired Server server) throws SQLException {
+//        entityManager.clear();
+//        //clear entities from the session
+//        connection.close();
+//        server.stop();
+//    }
 
     @Test
     public void testUserRegistrationAndLogin() {
