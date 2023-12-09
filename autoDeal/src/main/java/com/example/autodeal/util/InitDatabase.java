@@ -39,7 +39,7 @@ public class InitDatabase {
         userModel.setPassword(passwordEncoder.encode("abc"));
         userModel.setEmail("jan.kowalski@gmail.com");
         userModel.setPhone("501-151-658");
-        //userModel.setEnabled(true);
+        userModel.setEnabled(true);
         userModel.setRoles(Set.of(savedAdmin));
         userRepository.save(userModel);
 
@@ -52,7 +52,7 @@ public class InitDatabase {
         userModel2.setPassword(passwordEncoder.encode("asd"));
         userModel2.setEmail("jan.kot@gmail.com");
         userModel2.setPhone("501-965-123");
-       // userModel2.setEnabled(true);
+       userModel2.setEnabled(true);
         userModel2.setRoles(Set.of(savedAdmin2));//savedUser
         userRepository.save(userModel2);
 
