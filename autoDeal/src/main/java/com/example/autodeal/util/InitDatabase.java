@@ -53,7 +53,7 @@ public class InitDatabase {
         userModel2.setEmail("jan.kot@gmail.com");
         userModel2.setPhone("501-965-123");
        // userModel2.setEnabled(true);
-        userModel2.setRoles(Set.of(savedAdmin2));
+        userModel2.setRoles(Set.of(savedAdmin2));//savedUser
         userRepository.save(userModel2);
 
     }
