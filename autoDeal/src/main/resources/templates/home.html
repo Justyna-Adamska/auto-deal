@@ -1,47 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .navbar-brand,
-        .navbar-text {
-            display: block;
-        }
 
-        .navbar-text {
-            color: rgba(255, 255, 255, .5);
-        }
 
-        .logout-btn {
-            margin-left: auto;
-        }
-    </style>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <div>
-            <a class="navbar-brand" href="#" th:href="@{/}">Auto-Deal</a>
+<body class="container">
+<div th:replace="fragments/navbar"></div>
 
-            <span class="navbar-text">
+<span style="color:#090000"
+
+        class="navbar-text">
               Welcome <span th:text="${username}"></span>
 
                 (<span th:text="${userRole}"></span>)
             </span>
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <a href="/logout" th:href="@{/logout}" class="btn btn-primary logout-btn" role="button">Logout</a>
-        </div>
-    </div>
-</nav>
+
 <div class="container mt-4">
+
+
+
     <h4>Now you can</h4>
     <!--    <p>Spring Security Thymeleaf tutorial</p>-->
     <div sec:authorize="hasRole('USER')">
@@ -64,6 +40,7 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 
 
 </html>
