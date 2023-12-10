@@ -65,7 +65,11 @@ public class OrderMapper {
                 .orElseThrow(() -> new IllegalStateException("User not found"));
         order.setUser(user);
 
-        order.setStatus(OrderStatus.valueOf(dto.getStatus()));
+        if (dto.getStatus() != null) {
+            order.setStatus(OrderStatus.valueOf(dto.getStatus()));
+        } else {
+            order.setStatus(OrderStatus.NEW);
+        }
 
         Set<OrderLineModel> orderLines = new HashSet<>();
         if (dto.getOrderLines() != null) {
@@ -76,6 +80,7 @@ public class OrderMapper {
             }
         }
         order.setOrderLines(orderLines);
+
         if (dto.getPaymentDetails() != null) {
             PaymentDetailsModel paymentDetails = paymentDetailsMapper.toPaymentDetailsModel(dto.getPaymentDetails());
             order.setPaymentDetails(paymentDetails);
@@ -83,6 +88,7 @@ public class OrderMapper {
 
         return order;
     }
+
 
     public OrderLineDTO toOrderLineDTO(OrderLineModel line) {
         if (line == null) {

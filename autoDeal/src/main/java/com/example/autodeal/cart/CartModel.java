@@ -1,18 +1,20 @@
 package com.example.autodeal.cart;
 
-import com.example.autodeal.product.dto.ProductDto;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "carts")
+@ToString
 public class CartModel {
 
     @Id
@@ -22,7 +24,7 @@ public class CartModel {
     @Column(name = "user_id")
     private Integer userId;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CartItem> items = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,11 +35,13 @@ public class CartModel {
         this.lastUpdated = new Date();
     }
 
-    public void addItem(ProductDto productDto) {
-        CartItem newItem = new CartItem();
-        newItem.setProductId(Long.valueOf(productDto.getId()));
-        newItem.setPrice(new BigDecimal(productDto.getPrice()));
-        items.add(newItem);
+    public void addItem(CartItem item) {
+        if (item.getPrice() == null) {
+            throw new IllegalArgumentException("Item price cannot be null");
+        }
+
+        items.add(item);
+        item.setCart(this);
         this.lastUpdated = new Date();
     }
 
@@ -63,6 +67,19 @@ public class CartModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartModel cartModel = (CartModel) o;
+        return Objects.equals(id, cartModel.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

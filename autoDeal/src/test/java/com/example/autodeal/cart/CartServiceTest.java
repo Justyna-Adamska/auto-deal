@@ -1,6 +1,8 @@
 package com.example.autodeal.cart;
 
+import com.example.autodeal.exception.CartNotFoundException;
 import com.example.autodeal.exception.ProductNotFoundException;
+import com.example.autodeal.exception.UserNotFoundException;
 import com.example.autodeal.order.dto.OrderDTO;
 import com.example.autodeal.order.model.PaymentType;
 import com.example.autodeal.order.service.OrderService;
@@ -11,12 +13,15 @@ import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -104,5 +109,27 @@ public class CartServiceTest {
 
         assertThrows(ProductNotFoundException.class, () -> cartService.addItemToCart(userId, productId));
     }
+    @Test
+    void getCartForUser_CartNotFound_ShouldThrowException() {
+        Integer userId = 1;
+        setupAuthenticatedUser(userId, "ROLE_USER");
+        when(cartRepository.findByUserId(userId)).thenReturn(Optional.empty());
+        assertThrows(CartNotFoundException.class, () -> cartService.getCartForUser(userId));
+    }
 
+    @Test
+    void getCartForUser_NoAuthentication_ShouldThrowException() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        Integer userId = 1;
+        assertThrows(UserNotFoundException.class, () -> cartService.getCartForUser(userId));
+    }
+
+
+    @Test
+    void clearCartOnLogout_ShouldRemoveCart() {
+        Integer userId = 1;
+        setupAuthenticatedUser(userId, "ROLE_USER");
+        cartService.clearCartOnLogout(userId);
+        verify(cartRepository).deleteByUserId(userId);
+    }
 }

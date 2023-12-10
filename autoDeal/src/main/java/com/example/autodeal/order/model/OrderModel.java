@@ -2,14 +2,17 @@ package com.example.autodeal.order.model;
 
 import com.example.autodeal.user.model.UserModel;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"orderLines", "user", "paymentDetails"})
 @Table(name = "user_order")
 public class OrderModel {
 
@@ -40,9 +43,27 @@ public class OrderModel {
 
     public BigDecimal getTotalAmount() {
         BigDecimal total = BigDecimal.ZERO;
-        for (OrderLineModel line : orderLines) {
-            total = total.add(line.getTotalPrice());
+        if (orderLines != null) {
+            for (OrderLineModel line : orderLines) {
+                total = total.add(line.getTotalPrice());
+            }
         }
         return total;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderDate, status);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderModel that = (OrderModel) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(orderDate, that.orderDate) &&
+                status == that.status;
+    }
+
 }

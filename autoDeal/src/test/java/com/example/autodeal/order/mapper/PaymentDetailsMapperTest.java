@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -41,8 +42,8 @@ public class PaymentDetailsMapperTest {
         model.setPaymentMethod(PaymentType.DEPOSIT);
         model.setReservedAmount(new BigDecimal("2000.00"));
         model.setBalanceAmount(new BigDecimal("8000.00"));
-        model.setPaymentDate(new Date());
-        model.setReservationExpireDate(new Date());
+        model.setPaymentDate(LocalDate.of(2026, 12, 10));
+        model.setReservationExpireDate(LocalDate.of(2026, 12, 15));
         model.setTransactionId("TRANS123");
         model.setStatus(PaymentStatus.COMPLETED);
         OrderModel order = new OrderModel();

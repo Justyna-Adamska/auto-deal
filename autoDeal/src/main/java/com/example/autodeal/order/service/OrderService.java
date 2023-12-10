@@ -4,6 +4,7 @@ import com.example.autodeal.exception.*;
 import com.example.autodeal.order.dto.OrderDTO;
 import com.example.autodeal.order.dto.OrderLineDTO;
 import com.example.autodeal.order.mapper.OrderMapper;
+import com.example.autodeal.order.model.PaymentStatus;
 import com.example.autodeal.order.model.PaymentType;
 import com.example.autodeal.order.model.OrderModel;
 import com.example.autodeal.order.model.PaymentDetailsModel;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +44,10 @@ public class OrderService {
             throw new OrderCreationException("Order cannot be null");
         }
 
-        // Walidacja danych użytkownika
         if (!userRepository.existsById(orderDTO.getUserId())) {
             throw new UserNotFoundException("User not found with ID: " + orderDTO.getUserId());
         }
 
-        // Walidacja linii zamówienia
         if (orderDTO.getOrderLines() == null || orderDTO.getOrderLines().isEmpty()) {
             throw new OrderLineValidationException("Order must have at least one line item");
         }
@@ -65,19 +65,31 @@ public class OrderService {
             totalAmount = totalAmount.add(orderLineDTO.getUnitPrice().multiply(BigDecimal.valueOf(orderLineDTO.getQuantity())));
         }
 
-        // Walidacja daty zamówienia
-        if (orderDTO.getOrderDate() != null && orderDTO.getOrderDate().isAfter(ChronoLocalDateTime.from(LocalDate.now()))) {
+        if (orderDTO.getOrderDate() != null && orderDTO.getOrderDate().isAfter(LocalDateTime.now())) {
             throw new OrderCreationException("Order date cannot be in the future");
         }
 
-        // Walidacja całkowitej kwoty zamówienia
         if (orderDTO.getTotalAmount() == null || orderDTO.getTotalAmount().compareTo(totalAmount) != 0) {
             throw new OrderCreationException("Total amount is not correct");
         }
 
         OrderModel order = orderMapper.toOrderModel(orderDTO);
-        return orderMapper.toOrderDTO(orderRepository.save(order));
+        PaymentDetailsModel paymentDetails = new PaymentDetailsModel();
+        paymentDetails.setAmount(totalAmount);
+        paymentDetails.setPaymentMethod(PaymentType.ONLINE);
+        paymentDetails.setReservedAmount(totalAmount.multiply(ONLINE_PAYMENT_PERCENTAGE));
+        paymentDetails.setBalanceAmount(totalAmount.subtract(paymentDetails.getReservedAmount()));
+        paymentDetails.setPaymentDate(LocalDate.from(LocalDateTime.now()));
+        paymentDetails.setStatus(PaymentStatus.PENDING);
+
+        order.setPaymentDetails(paymentDetails);
+        paymentDetails.setOrder(order);
+
+        OrderModel savedOrder = orderRepository.save(order);
+
+        return orderMapper.toOrderDTO(savedOrder);
     }
+
 
     public Optional<OrderDTO> getOrderById(Integer id) throws OrderNotFoundException {
         return Optional.ofNullable(orderRepository.findById(id)

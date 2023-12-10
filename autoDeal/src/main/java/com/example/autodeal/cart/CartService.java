@@ -20,8 +20,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
@@ -58,33 +60,34 @@ public class CartService {
 
         return cartRepository.findByUserId(userId).orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
     }
-
+    @Transactional
     public void addItemToCart(Integer userId, Integer productId) throws CartUpdateException, ProductNotFoundException {
         ProductModel productModel = productService.findProductById(productId);
         if (productModel == null) {
             throw new ProductNotFoundException("Product with ID " + productId + " not found.");
         }
+        if (productModel.getPrice() == null) {
+            throw new IllegalArgumentException("Product price cannot be null");
+        }
+
+        CartItem newItem = new CartItem();
+        newItem.setProductId(Long.valueOf(productId));
+        newItem.setPrice(new BigDecimal(productModel.getPrice()).setScale(2, RoundingMode.HALF_UP));
 
         CartModel cart = getCartForUser(userId);
-        ProductDto productDto = ProductMapper.mapToProductDto(productModel);
-
-        cart.addItem(productDto);
-
-        boolean productAdded = cart.getItems().stream()
-                .anyMatch(item -> item.getProductId().equals(Long.valueOf(productDto.getId())));
-        if (!productAdded) {
-            throw new CartUpdateException("Error adding product to cart");
-        }
+        cart.addItem(newItem);
 
         cartRepository.save(cart);
     }
 
+
+    @Transactional
     public void removeItemFromCart(Integer userId, Integer productId) {
         CartModel cart = getCartForUser(userId);
         cart.getItems().removeIf(item -> item.getProductId().equals(productId.longValue()));
         cartRepository.save(cart);
     }
-
+    @Transactional
     public void checkout(Integer userId, PaymentType paymentType) throws OrderCreationException, UserNotFoundException, CartNotFoundException {
         CartModel cart = getCartForUser(userId);
 
@@ -139,7 +142,7 @@ public class CartService {
     private void processPayment(PaymentDetailsDTO paymentDetails, OrderDTO orderDTO) {
 
     }
-
+    @Transactional
     public void clearCartOnLogout(Integer userId) {
         cartRepository.deleteByUserId(userId);
     }

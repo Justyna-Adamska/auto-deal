@@ -1,5 +1,9 @@
 package com.example.autodeal.order.mapper;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import com.example.autodeal.order.dto.PaymentDetailsDTO;
 import com.example.autodeal.order.model.OrderModel;
@@ -31,10 +35,15 @@ public class PaymentDetailsMapper {
         dto.setPaymentMethod(model.getPaymentMethod().name());
         dto.setReservedAmount(model.getReservedAmount());
         dto.setBalanceAmount(model.getBalanceAmount());
-        dto.setPaymentDate(model.getPaymentDate());
-        dto.setReservationExpireDate(model.getReservationExpireDate());
+        if (model.getPaymentDate() != null) {
+            dto.setPaymentDate(java.sql.Date.valueOf(model.getPaymentDate()));
+        }
+        if (model.getReservationExpireDate() != null) {
+            dto.setReservationExpireDate(java.sql.Date.valueOf(model.getReservationExpireDate()));
+        }
         dto.setTransactionId(model.getTransactionId());
         dto.setStatus(String.valueOf(model.getStatus()));
+
 
         if (model.getOrder() != null) {
             dto.setOrderId(model.getOrder().getId());
@@ -55,8 +64,26 @@ public class PaymentDetailsMapper {
         model.setPaymentMethod(PaymentType.valueOf(dto.getPaymentMethod()));
         model.setReservedAmount(dto.getReservedAmount());
         model.setBalanceAmount(dto.getBalanceAmount());
-        model.setPaymentDate(dto.getPaymentDate());
-        model.setReservationExpireDate(dto.getReservationExpireDate());
+
+        Date paymentDate = dto.getPaymentDate();
+        if (paymentDate != null) {
+            Instant instant = Instant.ofEpochMilli(paymentDate.getTime());
+            LocalDate paymentLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+            model.setPaymentDate(paymentLocalDate);
+        } else {
+            model.setPaymentDate(null);
+        }
+
+        Date expireDate = dto.getReservationExpireDate();
+        if (expireDate != null) {
+            Instant instant = Instant.ofEpochMilli(expireDate.getTime());
+            LocalDate expireLocalDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+            model.setReservationExpireDate(expireLocalDate);
+        } else {
+            model.setReservationExpireDate(null);
+        }
+
+
         model.setTransactionId(dto.getTransactionId());
         model.setStatus(PaymentStatus.valueOf(dto.getStatus()));
 

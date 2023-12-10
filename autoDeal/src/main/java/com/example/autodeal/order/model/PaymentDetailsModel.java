@@ -1,13 +1,18 @@
 package com.example.autodeal.order.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.math.BigDecimal;
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "payment_details")
+@ToString(exclude = "order")
 public class PaymentDetailsModel {
 
     @Id
@@ -28,21 +33,19 @@ public class PaymentDetailsModel {
     private BigDecimal balanceAmount; // Kwota do zapłaty przy odbiorze samochodu
 
     @Column
-    private Date paymentDate; // Data dokonania płatności
+    private LocalDate paymentDate; // Data dokonania płatności
 
     @Column
-    private Date reservationExpireDate; // Data wygaśnięcia rezerwacji
+    private LocalDate reservationExpireDate; // Data wygaśnięcia rezerwacji
 
     @Column
     private String transactionId; // ID transakcji dla płatności online
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status; // np. "COMPLETED
+    private PaymentStatus status; // np. "COMPLETED"
 
-
-    @OneToOne
-    @JoinColumn(name = "order_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     private OrderModel order;
-
 }

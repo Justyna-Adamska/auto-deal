@@ -25,6 +25,7 @@ public class CartItem {
 
     }
 
+
     public CartItem(Long productId, BigDecimal price) {
         this.productId = productId;
         this.price = price;
