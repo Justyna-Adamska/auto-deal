@@ -19,6 +19,7 @@
 
 
     <h4>Now you can</h4>
+
     <!--    <p>Spring Security Thymeleaf tutorial</p>-->
     <div sec:authorize="hasRole('USER')">
         <a href="/userProfile" th:href="@{/user/profile}" class="btn btn-success">Go to your profile</a>
@@ -27,6 +28,7 @@
     <div sec:authorize="hasRole('ADMIN')">
         <a href="/adminDashboard" th:href="@{/admin/dashboard}" class="btn btn-success">Go to dashboard</a>
     </div>
+
 
     <!--    <h4>Or</h4>-->
     <!--    <div>-->
