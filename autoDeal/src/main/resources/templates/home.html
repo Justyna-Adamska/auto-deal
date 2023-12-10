@@ -4,7 +4,7 @@
 
 
 <body class="container">
-<div th:replace="fragments/navbar"></div>
+<div th:replace="~{fragments/navbar}"></div>
 
 <span style="color:#090000"
 
@@ -42,12 +42,27 @@
 
 
 
-</div>
+
+
 
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<div th:replace="fragments/footer"></div>
+
+<!--<div>-->
+<!--    <img src="/sergei.png" alt="Sergei">-->
+<!--</div>-->
+<!--    <img src="/sergei.png" class="object-fit-fill border rounded" alt="Sergei">-->
+<!--    <img src="/sergei.png" class="object-fit-md-contain border rounded" alt="Sergei">-->
+<!--    <a href="http://localhost:8080/home"><img src="/sergei.png" alt="Sergei" /></a>-->
+    <p align="center">
+    <img alt="Sergei" class="img-responsive mt-2"
+         th:src="@{/sergei.png}">
+    </p>
+
+
+    <div th:replace="~{fragments/footer}"></div>
+</div>
 </body>
 
 
