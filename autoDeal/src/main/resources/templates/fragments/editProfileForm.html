@@ -1,0 +1,29 @@
+<!-- editProfileForm.html -->
+<form method="post" th:action="@{/user/edit}" th:object="${user}" class="my-4 p-3 border rounded bg-light">
+    <!-- Pole ukryte dla id -->
+    <input type="hidden" th:field="*{id}" />
+
+    <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" id="firstName" class="form-control" th:field="*{firstName}" />
+    </div>
+
+    <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" id="lastName" class="form-control" th:field="*{lastName}" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" th:field="*{email}" />
+    </div>
+
+    <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="text" id="phone" class="form-control" th:field="*{phone}" />
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>

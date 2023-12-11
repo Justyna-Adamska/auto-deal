@@ -57,6 +57,9 @@ public class UserModel {
     @Column(name = "resetToken")
     private String resetToken;
 
+    @OneToOne(mappedBy = "userModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private VerificationToken verificationToken;
+
     @ManyToMany
     @JoinTable (name="user_x_roles")
     @LazyCollection(LazyCollectionOption.FALSE)
