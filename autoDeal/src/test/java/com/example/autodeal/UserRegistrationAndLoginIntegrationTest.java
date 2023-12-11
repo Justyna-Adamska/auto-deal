@@ -95,5 +95,10 @@ public class UserRegistrationAndLoginIntegrationTest {
         assertNotNull(userDetails);
         assertEquals(signUpDto.getEmail(), userDetails.getUsername());
         assertTrue(passwordEncoder.matches("Test123!", userDetails.getPassword()));
+
+        userService.deleteUser(confirmedUser.getId());
+
+        assertFalse(userRepository.findById(confirmedUser.getId()).isPresent());
     }
-}
+    }
+

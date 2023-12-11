@@ -123,15 +123,28 @@ public class UserServiceTest {
 
     @Test
     void whenEditUser_thenUserIsSaved() {
-        UserModel user = new UserModel();
-        user.setId(1);
-        user.setEmail("user@example.com");
-        user.setPassword("password");
 
-        userService.saveEditUser(user);
+        UserModel existingUser = new UserModel();
+        existingUser.setId(1);
+        existingUser.setEmail("user@example.com");
+        existingUser.setPassword("password");
 
-        verify(userRepository, times(1)).save(user);
+        when(userRepository.findById(existingUser.getId())).thenReturn(Optional.of(existingUser));
+
+        UserModel editedUser = new UserModel();
+        editedUser.setId(existingUser.getId());
+        editedUser.setEmail("newEmail@example.com");
+        editedUser.setFirstName("NewFirstName");
+        editedUser.setLastName("NewLastName");
+        editedUser.setPhone("555-123-4567");
+        userService.saveEditUser(editedUser);
+        verify(userRepository).save(existingUser);
+        assertEquals(editedUser.getEmail(), existingUser.getEmail());
+        assertEquals(editedUser.getFirstName(), existingUser.getFirstName());
+        assertEquals(editedUser.getLastName(), existingUser.getLastName());
+        assertEquals(editedUser.getPhone(), existingUser.getPhone());
     }
+
 
     @Test
     public void whenValidEmail_thenUserShouldBeFound() {
@@ -177,10 +190,14 @@ public class UserServiceTest {
     @Test
     public void whenDeleteUser_thenUserShouldBeDeleted() {
         Integer userId = 1;
+
+        when(userRepository.existsById(userId)).thenReturn(true);
+
         userService.deleteUser(userId);
 
         verify(userRepository, times(1)).deleteById(userId);
     }
+
 
     @Test
     public void loadUserByUsername_UserFound_ReturnsUserDetails() {

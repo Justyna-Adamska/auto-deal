@@ -4,6 +4,38 @@
     <meta charset="UTF-8">
     <title>Auto-Deal Welcome to your profile!</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #editProfileButton, #viewOrdersButton, #deleteAccountButton {
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #editProfileButton {
+            background-color: #007bff;
+            color: white;
+        }
+        #viewOrdersButton {
+            background-color: #28a745;
+            color: white;
+        }
+        #deleteAccountButton {
+            background-color: #dc3545;
+            color: white;
+        }
+        #editProfileButton:hover {
+            background-color: #0056b3;
+        }
+        #viewOrdersButton:hover {
+            background-color: #218838;
+        }
+        #deleteAccountButton:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="fragments/navbar"></div>
@@ -17,24 +49,28 @@
                     <h2 class="text-center">Welcome to your profile!</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" th:action="@{/editUser}" class="form-horizontal">
+                    <th:block th:object="${user}">
                         <div class="form-group mb-3">
-                            <label class="control-label"> Username</label>
-                            <label for="username"></label><input type="text" id="username" name="username" class="form-control" placeholder="Username" />
+                            <label class="control-label">First Name</label>
+                            <input type="text" class="form-control" th:value="${user.firstName}" readonly />
                         </div>
                         <div class="form-group mb-3">
-                            <label class="control-label"> Email</label>
-                            <label for="email"></label><input type="email" id="email" name="email" class="form-control" placeholder="Email" />
+                            <label class="control-label">Last Name</label>
+                            <input type="text" class="form-control" th:value="${user.lastName}" readonly />
                         </div>
                         <div class="form-group mb-3">
-                            <button type="submit" class="btn btn-primary">Open orders</button>
-                            <button type="submit" class="btn btn-success">All orders</button>
-                            <button type="submit" class="btn btn-secondary">Historical orders</button>
-                            <p align="right">
-                            <button type="submit" class="btn btn-danger">Delete account</button>
-                            </p>
+                            <label class="control-label">Email</label>
+                            <input type="email" class="form-control" th:value="${user.email}" readonly />
                         </div>
-                    </form>
+                        <div class="form-group mb-3">
+                            <label class="control-label">Phone</label>
+                            <input type="text" class="form-control" th:value="${user.phone}" readonly />
+                        </div>
+                    </th:block>
+                    <button id="editProfileButton" class="btn">Edit Profile</button>
+                    <div id="editProfileFormContainer"></div> <!-- Kontener na formularz edycji -->
+                    <a id="viewOrdersButton" href="/orders" class="btn">View Orders</a>
+                    <button id="deleteAccountButton" class="btn">Delete Account</button>
                 </div>
                 <div class="card-footer text-center">
                     <p><a th:href="@{/logout}" class="link-primary">Logout</a></p>
@@ -44,5 +80,46 @@
     </div>
 </div>
 <div th:replace="fragments/footer"></div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var userId = '${user.id}';
+
+        $('#editProfileButton').click(function() {
+            $.ajax({
+                url: '/user/edit',
+                type: 'GET',
+                success: function(response) {
+                    $('#editProfileFormContainer').html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading form: ", error);
+                }
+            });
+        });
+
+        $('#deleteAccountButton').click(function() {
+            if (confirm('Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć.')) {
+                $.ajax({
+                    url: '/user/delete/' + userId,
+                    type: 'POST',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', '${_csrf.token}');
+                    },
+                    success: function () {
+                        window.location.href = '/home';
+                    },
+                    error: function (xhr) {
+                        var errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 'Wystąpił błąd podczas usuwania konta';
+                        alert(errorMsg);
+                    }
+                });
+            }
+        });
+    });
+
+</script>
 </body>
 </html>
