@@ -1,11 +1,15 @@
 package com.example.autodeal.order.model;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "order_line")
 public class OrderLineModel {
 
@@ -52,4 +56,23 @@ public class OrderLineModel {
     private void updateTotalPrice() {
         this.totalPrice = calculateLineTotal();
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId, quantity, unitPrice, totalPrice, discount);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderLineModel that = (OrderLineModel) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(productId, that.productId) &&
+                Objects.equals(quantity, that.quantity) &&
+                Objects.equals(unitPrice, that.unitPrice) &&
+                Objects.equals(totalPrice, that.totalPrice) &&
+                Objects.equals(discount, that.discount);
+    }
+
 }

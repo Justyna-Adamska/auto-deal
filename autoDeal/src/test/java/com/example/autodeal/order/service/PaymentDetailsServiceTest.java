@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,8 +55,8 @@ public class PaymentDetailsServiceTest {
         testModel.setPaymentMethod(PaymentType.DEPOSIT);
         testModel.setReservedAmount(new BigDecimal("2000.00"));
         testModel.setBalanceAmount(new BigDecimal("8000.00"));
-        testModel.setPaymentDate(new Date());
-        testModel.setReservationExpireDate(new Date());
+        testModel.setPaymentDate(LocalDate.of(2026, 12, 10));
+        testModel.setReservationExpireDate(LocalDate.of(2026, 12, 10));
         testModel.setTransactionId("TRANS123");
         testModel.setStatus(PaymentStatus.COMPLETED);
     }
