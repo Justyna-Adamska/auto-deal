@@ -63,8 +63,20 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
     }
 
-    public void saveEditUser(UserModel editUser) {
-        userRepository.save(editUser);
+    public void saveEditUser(UserModel editedUser) {
+        UserModel existingUser = userRepository.findById(editedUser.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        existingUser.setFirstName(editedUser.getFirstName());
+        existingUser.setLastName(editedUser.getLastName());
+        existingUser.setEmail(editedUser.getEmail());
+        existingUser.setPhone(editedUser.getPhone());
+
+        if (editedUser.getPassword() != null && !editedUser.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(editedUser.getPassword()));
+        }
+
+        userRepository.save(existingUser);
     }
 
     public void deleteUser(Integer id) {
@@ -74,6 +86,7 @@ public class UserService implements UserDetailsService {
 
         userRepository.deleteById(id);
     }
+  
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel user = findUserByEmail(email);
