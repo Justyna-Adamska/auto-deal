@@ -80,13 +80,13 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUser(Integer id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("User not found with id: " + id);
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("User with ID " + id + " does not exist");
         }
-    }
 
+        userRepository.deleteById(id);
+    }
+  
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel user = findUserByEmail(email);
