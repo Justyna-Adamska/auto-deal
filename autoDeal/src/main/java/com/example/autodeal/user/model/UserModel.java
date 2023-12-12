@@ -68,7 +68,7 @@ public class UserModel {
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<UserRole> roles;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderModel> orders;
 
 
