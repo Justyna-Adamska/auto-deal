@@ -103,6 +103,12 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderDTO> findOrdersByUserId(Integer userId) {
+        return orderRepository.findAllByUserId(userId).stream()
+                .map(orderMapper::toOrderDTO)
+                .collect(Collectors.toList());
+    }
+
     public OrderDTO updateOrder(OrderDTO orderDTO) throws OrderCreationException, OrderNotFoundException, UserNotFoundException, OrderLineValidationException, ProductNotFoundException {
         if (orderDTO == null) {
             throw new OrderCreationException("Order cannot be null");
@@ -175,7 +181,7 @@ public class OrderService {
         paymentDetails.setReservedAmount(onlinePaymentAmount);
         paymentDetails.setBalanceAmount(order.getTotalAmount().subtract(onlinePaymentAmount));
         paymentDetails.setAmount(order.getTotalAmount());
-        paymentDetails.setPaymentMethod(PaymentType.DEPOSIT); // Ustawienie typu płatności
+        paymentDetails.setPaymentMethod(PaymentType.DEPOSIT);
         return paymentDetails;
     }
 

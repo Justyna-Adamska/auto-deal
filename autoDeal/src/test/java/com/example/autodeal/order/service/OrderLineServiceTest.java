@@ -1,25 +1,29 @@
 package com.example.autodeal.order.service;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import com.example.autodeal.order.dto.OrderDTO;
+import com.example.autodeal.order.dto.OrderLineDTO;
+import com.example.autodeal.order.mapper.OrderMapper;
+import com.example.autodeal.order.model.OrderLineModel;
+import com.example.autodeal.order.model.OrderModel;
+import com.example.autodeal.order.repository.OrderLineRepository;
+import com.example.autodeal.order.repository.OrderRepository;
+import com.example.autodeal.exception.OrderLineValidationException;
+import com.example.autodeal.product.repository.ProductRepository;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.InjectMocks;
-
-import com.example.autodeal.order.dto.OrderLineDTO;
-import com.example.autodeal.order.mapper.OrderMapper;
-import com.example.autodeal.order.model.OrderLineModel;
-import com.example.autodeal.order.repository.OrderLineRepository;
-import com.example.autodeal.exception.OrderLineValidationException;
-import com.example.autodeal.product.repository.ProductRepository;
+import org.mockito.junit.MockitoJUnitRunner;
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-@RunWith(MockitoJUnitRunner.class) //alternatywa dla: Mockito.initMocks(this)
+@RunWith(MockitoJUnitRunner.class)
 public class OrderLineServiceTest {
 
     @Mock
@@ -31,8 +35,14 @@ public class OrderLineServiceTest {
     @Mock
     private OrderMapper orderMapper;
 
+    @Mock
+    private OrderRepository orderRepository;
+
     @InjectMocks
     private OrderLineService orderLineService;
+
+    @InjectMocks
+    private OrderService orderService;
 
     private OrderLineDTO validOrderLineDTO;
     private OrderLineDTO invalidOrderLineDTO;
@@ -126,5 +136,28 @@ public class OrderLineServiceTest {
         when(orderLineRepository.existsById(anyInt())).thenReturn(false);
         orderLineService.deleteOrderLine(1);
     }
+    @Test
+   public void findOrdersByUserId_WhenNoOrders_ShouldReturnEmptyList() {
+        Integer userId = 1;
+        when(orderRepository.findAllByUserId(userId)).thenReturn(Collections.emptyList());
 
+        List<OrderDTO> result = orderService.findOrdersByUserId(userId);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+   public void findOrdersByUserId_WhenOrdersExist_ShouldReturnOrderList() {
+        Integer userId = 1;
+        OrderModel mockOrder = mock(OrderModel.class);
+        OrderDTO mockOrderDTO = mock(OrderDTO.class);
+
+        when(orderRepository.findAllByUserId(userId)).thenReturn(Collections.singletonList(mockOrder));
+        when(orderMapper.toOrderDTO(mockOrder)).thenReturn(mockOrderDTO);
+
+        List<OrderDTO> result = orderService.findOrdersByUserId(userId);
+
+        assertFalse(result.isEmpty());
+        assertEquals(mockOrderDTO, result.get(0));
+    }
 }
