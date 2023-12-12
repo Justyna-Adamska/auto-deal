@@ -1,5 +1,6 @@
 package com.example.autodeal.user.controller;
 
+import com.example.autodeal.order.service.OrderService;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 //@WebMvcTest(UserController.class)
-@SpringBootTest
+@WebMvcTest(UserController.class)
 class UserControllerTest {
 
     @Autowired
@@ -31,6 +32,8 @@ class UserControllerTest {
 
     @MockBean
     private UserService userService;
+    @MockBean
+    private OrderService orderService;
 
     @MockBean
     private Authentication authentication;
