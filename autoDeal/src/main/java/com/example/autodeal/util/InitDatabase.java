@@ -1,7 +1,13 @@
 package com.example.autodeal.util;
 
+
 import com.example.autodeal.order.model.*;
 import com.example.autodeal.order.repository.OrderRepository;
+
+import com.example.autodeal.product.enums.ProductType;
+import com.example.autodeal.product.model.ProductModel;
+import com.example.autodeal.product.repository.ProductRepository;
+
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.model.UserRole;
 import com.example.autodeal.user.repository.UserRepository;
@@ -26,7 +32,11 @@ public class InitDatabase {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
+
     private final OrderRepository orderRepository;
+
+    private final ProductRepository productRepository;
+
     @PostConstruct
     public void  init(){
 
@@ -62,6 +72,7 @@ public class InitDatabase {
        userModel2.setEnabled(true);
         userModel2.setRoles(Set.of(savedAdmin2));//savedUser
         userRepository.save(userModel2);
+
 
         UserModel janKot = userRepository.findByEmail("jan.kot@gmail.com")
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
@@ -119,6 +130,51 @@ public class InitDatabase {
         secondOrder.setPaymentDetails(secondPaymentDetails);
 
         orderRepository.save(secondOrder);
+
+        ProductModel productModel1 = new ProductModel();
+
+        productModel1.setName("Dacia prawie niebita");
+        productModel1.setPrice(10000);
+        productModel1.setCarMake("Dacia");
+        productModel1.setMileage(200000);
+        productModel1.setOrigin("Maroko");
+        productModel1.setType(ProductType.VAN);
+        productModel1.setCode(1234567L);
+        productModel1.setColor("white");
+        productModel1.setWarranty(1);
+        productModel1.setProductionYear(2019);
+        productRepository.save(productModel1);
+
+        ProductModel productModel2 = new ProductModel();
+
+        productModel2.setName("Passat jak nowy");
+        productModel2.setPrice(5000);
+        productModel2.setCarMake("Volkswagen");
+        productModel2.setMileage(300000);
+        productModel2.setOrigin("Niemcy");
+        productModel2.setType(ProductType.SEDAN);
+        productModel2.setCode(7654321L);
+        productModel2.setColor("black");
+        productModel2.setWarranty(0);
+        productModel2.setProductionYear(2016);
+        productRepository.save(productModel2);
+
+        ProductModel productModel3 = new ProductModel();
+
+        productModel3.setName("Renault prosto z Paryża");
+        productModel3.setPrice(5500);
+        productModel3.setCarMake("Renault");
+        productModel3.setMileage(30000);
+        productModel3.setOrigin("Francja");
+        productModel3.setType(ProductType.HATCHBACK);
+        productModel3.setCode(2222222L);
+        productModel3.setColor("red");
+        productModel3.setWarranty(2);
+        productModel3.setProductionYear(2006);
+        productRepository.save(productModel3);
+
+    }
+
 
     }
 }

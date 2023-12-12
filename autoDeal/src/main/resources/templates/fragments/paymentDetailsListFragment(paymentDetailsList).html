@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Details</title>
+    <!-- Link do Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .table-container {
+            margin: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        thead {
+            background-color: #007bff;
+            color: white;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .no-data {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <div th:fragment="paymentDetailsListFragment(paymentDetailsList)">
+        <div th:if="${paymentDetailsList != null}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <!-- Nagłówki tabeli -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="paymentDetails : ${paymentDetailsList}">
+                    <!-- Dane tabeli -->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${paymentDetailsList == null}" class="no-data">
+            <p>No payment details available.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Opcjonalnie, link do Bootstrap JS i zależności -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

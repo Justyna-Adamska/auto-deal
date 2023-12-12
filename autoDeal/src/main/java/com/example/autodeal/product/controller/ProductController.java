@@ -59,6 +59,7 @@ public class ProductController {
     //Metody dla admina
 
     //Dodawanie nowego produktu
+
     @PostMapping("/admin/addProduct")
     public ResponseEntity<ProductDto> addNewProduct(@RequestBody ProductDto product) {
         ProductModel productModel = ProductMapper.mapToProductModel(product);
@@ -83,10 +84,14 @@ public class ProductController {
     }
 
     //getting all products
-    @GetMapping("/admin/products")
-    public ResponseEntity<List<ProductDto>> showProducts() {
+    @GetMapping("/showProducts")
+   // public ResponseEntity<List<ProductDto>> showProducts() {
+            public String showProducts(Model model){
         List<ProductModel> productModels = productService.findAllProducts();
-        return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
+        model.addAttribute("productModel", productModels);
+       // return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
+        return"admin/showProducts";
+
     }
 
 }

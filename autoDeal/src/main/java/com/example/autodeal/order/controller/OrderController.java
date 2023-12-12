@@ -4,12 +4,14 @@ import com.example.autodeal.exception.*;
 import com.example.autodeal.order.dto.OrderDTO;
 import com.example.autodeal.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin/orders")
+@Secured("ROLE_ADMIN")
 public class OrderController {
 
     private final OrderService orderService;
