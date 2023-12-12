@@ -1,7 +1,8 @@
 package com.example.autodeal.user.model;
 
+import com.example.autodeal.order.model.OrderModel;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -11,7 +12,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "orders")
 @Table(name = "customer")
 public class UserModel {
 
@@ -64,5 +67,9 @@ public class UserModel {
     @JoinTable (name="user_x_roles")
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<UserRole> roles;
+
+    @OneToMany(mappedBy = "user")
+    private Set<OrderModel> orders;
+
 
 }

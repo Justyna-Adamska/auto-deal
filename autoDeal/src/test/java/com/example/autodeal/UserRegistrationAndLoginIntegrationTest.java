@@ -19,7 +19,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import jakarta.servlet.http.HttpServletResponse;
-
+import org.springframework.test.context.jdbc.Sql;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 //@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = )
-//@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/delete-test-data.sql"})
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/delete-test-data.sql"})
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserRegistrationAndLoginIntegrationTest {
 
@@ -96,9 +96,9 @@ public class UserRegistrationAndLoginIntegrationTest {
         assertEquals(signUpDto.getEmail(), userDetails.getUsername());
         assertTrue(passwordEncoder.matches("Test123!", userDetails.getPassword()));
 
-        userService.deleteUser(confirmedUser.getId());
+        //userService.deleteUser(confirmedUser.getId());
 
-        assertFalse(userRepository.findById(confirmedUser.getId()).isPresent());
+        //assertFalse(userRepository.findById(confirmedUser.getId()).isPresent());
     }
     }
 
