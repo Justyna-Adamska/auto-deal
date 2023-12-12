@@ -35,6 +35,9 @@
         #deleteAccountButton:hover {
             background-color: #c82333;
         }
+        #ordersContainer {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -68,9 +71,12 @@
                         </div>
                     </th:block>
                     <button id="editProfileButton" class="btn">Edit Profile</button>
-                    <div id="editProfileFormContainer"></div> <!-- Kontener na formularz edycji -->
-                    <a id="viewOrdersButton" href="/orders" class="btn">View Orders</a>
+                    <div id="editProfileFormContainer"></div>
+                    <a id="viewOrdersButton" class="btn" th:href="@{/user/orders}" style="background-color: #28a745; color: white;">View Orders</a>
+
+
                     <button id="deleteAccountButton" class="btn">Delete Account</button>
+                    <div id="ordersContainer"></div> <!-- Kontener na zawartość strony zamówień -->
                 </div>
                 <div class="card-footer text-center">
                     <p><a th:href="@{/logout}" class="link-primary">Logout</a></p>
@@ -99,6 +105,9 @@
                 }
             });
         });
+        $('#viewOrdersButton').click(function() {
+            window.location.href = '/orders';
+        });
 
         $('#deleteAccountButton').click(function() {
             if (confirm('Czy na pewno chcesz usunąć swoje konto? Tej operacji nie można cofnąć.')) {
@@ -108,10 +117,10 @@
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader('X-CSRF-TOKEN', '${_csrf.token}');
                     },
-                    success: function () {
+                    success: function() {
                         window.location.href = '/home';
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         var errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 'Wystąpił błąd podczas usuwania konta';
                         alert(errorMsg);
                     }
@@ -119,7 +128,7 @@
             }
         });
     });
-
 </script>
+
 </body>
 </html>

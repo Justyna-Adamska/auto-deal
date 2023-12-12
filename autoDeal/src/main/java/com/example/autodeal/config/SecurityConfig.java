@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/orders").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/orders").authenticated()
                         .requestMatchers("/cart/**").authenticated() // Tylko uwierzytelnieni użytkownicy mają dostęp do ścieżek koszyka
                         .anyRequest().permitAll())
 //                .addFilter(new JwtAuthorizationFilter(authenticationManager, userDetailsService, secret))
