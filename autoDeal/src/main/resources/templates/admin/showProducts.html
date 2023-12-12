@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Available Deals for You!</title>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar"></div>
+
+<p1>
+
+    Here are Your Best Deals!
+
+</p1>
+<td></td>
+
+
+
+
+
+
+
+                <div class="col" th:each="product : ${productModel}">
+                    <div class="col-xl-6 col-md-6 mb-6">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">ID</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="name"  th:value="${product.getId()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Name</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getName()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Price</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getPrice()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Car Make</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getCarMake()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Mileage</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getMileage()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Origin</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getOrigin()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Type</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getType()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Code</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getCode()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Color</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price"th:value="${product.getColor()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Warranty</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getWarranty()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Production Year</label>
+                                        <div class="col-8">
+                                            <input class="form-control" type="text" name="price" th:value="${product.getProductionYear()}">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-4 col-form-label">Action</label>
+                                        <div class="col-8">
+                                            <button type="button" class="btn btn-success">Add to Cart</button>
+
+<!--                                            <input class="form-control" type="text" name="price" th:value="${productModel[0].getPrice()}">-->
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
