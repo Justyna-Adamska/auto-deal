@@ -41,11 +41,12 @@ public class HomeController {
     }
 
     @PostMapping("/registration")
-    public String registerNewUser(@RequestBody SignUpDto signUpDto, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public String registerNewUser(SignUpDto signUpDto, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         userService.registerNewUser(signUpDto, response);
         redirectAttributes.addFlashAttribute("success", "User is registered successfully!");
         return "redirect:/registration-success";
     }
+
 
     @GetMapping("/registration-success")
     public String registrationSuccess() {
