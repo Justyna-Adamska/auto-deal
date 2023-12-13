@@ -22,12 +22,33 @@
 
     <!--    <p>Spring Security Thymeleaf tutorial</p>-->
     <div sec:authorize="hasRole('USER')">
+
         <a href="/userProfile" th:href="@{/user/profile}" class="btn btn-success">Go to your profile</a>
+
+        <p align="center">
+        <img style='height: 100%; width: 100%; object-fit: contain' alt="Renault" class="img-responsive mt-2"
+             th:src="@{/Renault.png}">
+        </p>
+
+        <p>
+            <img style='height: 49%; width: 49%; object-fit: contain' alt="Dacia" class="img-responsive mt-2"
+                 th:src="@{/Dacia.png}">
+            <img style='height: 49%; width: 49%; object-fit: contain' alt="Alfa romeo" class="img-responsive mt-2"
+                 th:src="@{/Alfa-romeo.png}">
+        </p>
+
     </div>
 
     <div sec:authorize="hasRole('ADMIN')">
         <a href="/adminDashboard" th:href="@{/admin/dashboard}" class="btn btn-success">Go to dashboard</a>
+            <p align="center">
+            <img alt="Sergei" class="img-responsive mt-2"
+                 th:src="@{/sergei.png}">
+            </p>
     </div>
+
+
+
 
 
     <!--    <h4>Or</h4>-->
@@ -55,10 +76,10 @@
 <!--    <img src="/sergei.png" class="object-fit-fill border rounded" alt="Sergei">-->
 <!--    <img src="/sergei.png" class="object-fit-md-contain border rounded" alt="Sergei">-->
 <!--    <a href="http://localhost:8080/home"><img src="/sergei.png" alt="Sergei" /></a>-->
-    <p align="center">
-    <img alt="Sergei" class="img-responsive mt-2"
-         th:src="@{/sergei.png}">
-    </p>
+<!--    <p align="center">-->
+<!--    <img alt="Sergei" class="img-responsive mt-2"-->
+<!--         th:src="@{/sergei.png}">-->
+<!--    </p>-->
 
 
     <div th:replace="~{fragments/footer}"></div>
