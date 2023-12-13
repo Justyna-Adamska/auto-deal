@@ -51,7 +51,7 @@ public class InitDatabase {
 
         UserModel userModel = new UserModel();
 
-        userModel.setFirstName("Marian");
+        userModel.setFirstName("Jan");
         userModel.setLastName("Kowalski");
         userModel.setPassword(passwordEncoder.encode("abc"));
         userModel.setEmail("jan.kowalski@gmail.com");
