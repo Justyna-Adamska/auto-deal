@@ -18,7 +18,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-
 @Slf4j
 @Service
 public class NotificationService {
@@ -65,15 +64,25 @@ public class NotificationService {
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
         Date expiryDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(resetToken);
-        verificationToken.setUserModel(user);
-        verificationToken.setExpiryDate(expiryDate);
-        verificationTokenRepository.save(verificationToken);
+        VerificationToken existingToken = verificationTokenRepository.findByUserModel(user).orElse(null);
+
+        if (existingToken != null) {
+            existingToken.setToken(resetToken);
+            existingToken.setExpiryDate(expiryDate);
+        } else {
+            VerificationToken newToken = new VerificationToken();
+            newToken.setToken(resetToken);
+            newToken.setUserModel(user);
+            newToken.setExpiryDate(expiryDate);
+            existingToken = newToken;
+        }
+
+        verificationTokenRepository.save(existingToken);
 
         sendResetEmail(email, resetToken);
         return "SUCCESS";
     }
+
 
     private void sendResetEmail(String email, String resetToken) {
         String resetUrl = "http://auto-deal.com/reset-password?token=" + resetToken;

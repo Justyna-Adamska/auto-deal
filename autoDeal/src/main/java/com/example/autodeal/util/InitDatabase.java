@@ -3,18 +3,22 @@ package com.example.autodeal.util;
 
 import com.example.autodeal.order.model.*;
 import com.example.autodeal.order.repository.OrderRepository;
+
 import com.example.autodeal.product.enums.ProductType;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.product.repository.ProductRepository;
+
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.model.UserRole;
 import com.example.autodeal.user.repository.UserRepository;
 import com.example.autodeal.user.repository.UserRoleRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.management.relation.Role;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,7 +38,7 @@ public class InitDatabase {
     private final ProductRepository productRepository;
 
     @PostConstruct
-    public void init() {
+    public void  init(){
 
         UserRole userRole = new UserRole();
         userRole.setName("ROLE_ADMIN");
@@ -57,6 +61,7 @@ public class InitDatabase {
         userRepository.save(userModel);
 
 
+
         UserModel userModel2 = new UserModel();
 
         userModel2.setFirstName("Jan");
@@ -64,7 +69,7 @@ public class InitDatabase {
         userModel2.setPassword(passwordEncoder.encode("asd"));
         userModel2.setEmail("jan.kot@gmail.com");
         userModel2.setPhone("501-965-123");
-        userModel2.setEnabled(true);
+       userModel2.setEnabled(true);
         userModel2.setRoles(Set.of(savedAdmin2));//savedUser
         userRepository.save(userModel2);
 
@@ -171,5 +176,5 @@ public class InitDatabase {
     }
 
 
-}
+    }
 
