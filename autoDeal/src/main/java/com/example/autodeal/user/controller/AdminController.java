@@ -5,7 +5,10 @@ import com.example.autodeal.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public class AdminController {
 
     // Lista wszystkich użytkowników
     @GetMapping("/users")
-    public String findAllUsers(Model model){
+    public String findAllUsers(Model model) {
         List<UserModel> userList = userService.findAllUsers();
 
         model.addAttribute("userModel", userList);
@@ -45,16 +48,16 @@ public class AdminController {
 
     @GetMapping("/{id}") //metoda do przegladania konkretnych profili użytkowników
 
-    public String getUser(@PathVariable("id") Integer id, Model model){
+    public String getUser(@PathVariable("id") Integer id, Model model) {
         UserModel user = userService.findUserById(id);
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
 
         return "admin/userDetails";
     }
 
 
     @PostMapping("/editUser/{id}")
-    public RedirectView editUser(@PathVariable("id") Integer id, UserModel editUser){
+    public RedirectView editUser(@PathVariable("id") Integer id, UserModel editUser) {
         userService.saveEditUser(editUser);
         return new RedirectView("/admin/users");
     }

@@ -91,7 +91,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        var userId = '${user.id}';
+        var userId = [[${user.id}]];
 
         $('#editProfileButton').click(function() {
             $.ajax({
@@ -118,7 +118,7 @@
                         xhr.setRequestHeader('X-CSRF-TOKEN', '${_csrf.token}');
                     },
                     success: function() {
-                        window.location.href = '/home';
+                        window.location.href = '/login';
                     },
                     error: function(xhr) {
                         var errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 'Wystąpił błąd podczas usuwania konta';

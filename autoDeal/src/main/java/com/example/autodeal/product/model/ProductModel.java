@@ -2,7 +2,10 @@ package com.example.autodeal.product.model;
 
 import com.example.autodeal.product.enums.ProductType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -12,7 +15,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name= "product")
+@Table(name = "product")
 public class ProductModel {
 
 

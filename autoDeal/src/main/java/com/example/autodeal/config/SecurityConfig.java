@@ -2,11 +2,9 @@ package com.example.autodeal.config;
 
 import com.example.autodeal.cart.CartService;
 import com.example.autodeal.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -31,7 +29,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public static PasswordEncoder passwordEncoder(){
+    public static PasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
 
@@ -45,7 +43,7 @@ public class SecurityConfig {
 //                .sessionManagement()
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  //
 //
-                .csrf(csrf->csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/user/orders").authenticated()
@@ -59,15 +57,16 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessHandler( logoutSuccessHandler (cartService, userService))
+                        .logoutSuccessHandler(logoutSuccessHandler(cartService, userService))
                         .permitAll());
         return http.build();
     }
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler(CartService cartService, UserService userService) {
-        return new CustomLogoutSuccessHandler( cartService,  userService);
+        return new CustomLogoutSuccessHandler(cartService, userService);
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();

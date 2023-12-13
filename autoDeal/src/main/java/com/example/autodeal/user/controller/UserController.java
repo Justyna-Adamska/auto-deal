@@ -1,7 +1,6 @@
 package com.example.autodeal.user.controller;
+
 import com.example.autodeal.order.dto.OrderDTO;
-import com.example.autodeal.order.model.OrderModel;
-import com.example.autodeal.order.repository.OrderRepository;
 import com.example.autodeal.order.service.OrderService;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.service.UserService;
@@ -25,25 +24,26 @@ public class UserController {
     private final OrderService orderService;
 
 
-//wyświetlanie własnego profilu użytkownika
-@GetMapping("/profile")
-public String userProfile(Model model) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
-    UserModel user = userService.findUserByEmail(email);
-    model.addAttribute("user", user);
-    return "user/userProfile";
-}
+    //wyświetlanie własnego profilu użytkownika
+    @GetMapping("/profile")
+    public String userProfile(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        UserModel user = userService.findUserByEmail(email);
+        model.addAttribute("user", user);
+        return "user/userProfile";
+    }
 
-//możliwość edycji własnych danych przez użytkownika
-@GetMapping("/edit")
-public String showEditFormFragment(Model model){
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String email = authentication.getName();
-    UserModel user = userService.findUserByEmail(email);
-    model.addAttribute("user", user);
-    return "fragments/editProfileForm";
-}
+    //możliwość edycji własnych danych przez użytkownika
+    @GetMapping("/edit")
+    public String showEditFormFragment(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        UserModel user = userService.findUserByEmail(email);
+        model.addAttribute("user", user);
+        return "fragments/editProfileForm";
+    }
+
     @PostMapping("/edit")
     public String saveEditedUser(@ModelAttribute UserModel user, Model model) {
         userService.saveEditUser(user);
@@ -62,7 +62,7 @@ public String showEditFormFragment(Model model){
         UserModel user = userService.findUserById(id);
         if (user != null && user.getEmail().equals(currentUserName)) {
             userService.deleteUser(id);
-            return new RedirectView("/logout");
+            return new RedirectView("/login");
         } else {
             return new RedirectView("/errorPage");
         }

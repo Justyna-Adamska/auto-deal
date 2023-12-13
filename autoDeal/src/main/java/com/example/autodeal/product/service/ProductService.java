@@ -1,12 +1,9 @@
 package com.example.autodeal.product.service;
 
-import com.example.autodeal.order.model.OrderModel;
 import com.example.autodeal.product.enums.ProductType;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.product.repository.ProductRepository;
-import com.example.autodeal.user.model.UserModel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +16,7 @@ public class ProductService {
 
 
     public ProductModel findProductById(Integer id) {
-        return productRepository.findById(id).orElseThrow(()-> new RuntimeException("Could not find product by id"));
+        return productRepository.findById(id).orElseThrow(() -> new RuntimeException("Could not find product by id"));
     }
 
     public List<ProductModel> findAllProducts() {
@@ -27,7 +24,7 @@ public class ProductService {
     }
 
 
-    public ProductModel addProduct(ProductModel product){
+    public ProductModel addProduct(ProductModel product) {
         return productRepository.save(product);
     }
 

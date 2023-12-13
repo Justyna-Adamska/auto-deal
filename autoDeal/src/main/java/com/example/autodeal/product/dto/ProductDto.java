@@ -1,7 +1,6 @@
 package com.example.autodeal.product.dto;
 
 import com.example.autodeal.product.enums.ProductType;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

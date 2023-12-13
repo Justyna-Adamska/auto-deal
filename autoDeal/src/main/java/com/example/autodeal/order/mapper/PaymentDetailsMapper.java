@@ -1,10 +1,5 @@
 package com.example.autodeal.order.mapper;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 import com.example.autodeal.order.dto.PaymentDetailsDTO;
 import com.example.autodeal.order.model.OrderModel;
 import com.example.autodeal.order.model.PaymentDetailsModel;
@@ -13,6 +8,11 @@ import com.example.autodeal.order.model.PaymentType;
 import com.example.autodeal.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Component
 public class PaymentDetailsMapper {
@@ -95,4 +95,4 @@ public class PaymentDetailsMapper {
 
         return model;
     }
-    }
+}

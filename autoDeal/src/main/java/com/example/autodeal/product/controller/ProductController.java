@@ -1,19 +1,16 @@
 package com.example.autodeal.product.controller;
 
-import com.example.autodeal.order.model.OrderModel;
+import com.example.autodeal.product.ProductMapper;
 import com.example.autodeal.product.dto.ProductDto;
 import com.example.autodeal.product.enums.ProductType;
-import com.example.autodeal.product.mapper.ProductMapper;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.product.service.ProductService;
-import com.example.autodeal.user.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -85,12 +82,12 @@ public class ProductController {
 
     //getting all products
     @GetMapping("/showProducts")
-   // public ResponseEntity<List<ProductDto>> showProducts() {
-            public String showProducts(Model model){
+    // public ResponseEntity<List<ProductDto>> showProducts() {
+    public String showProducts(Model model) {
         List<ProductModel> productModels = productService.findAllProducts();
         model.addAttribute("productModel", productModels);
-       // return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
-        return"admin/showProducts";
+        // return ResponseEntity.ok(ProductMapper.mapToProductDtoList(productModels));
+        return "admin/showProducts";
 
     }
 

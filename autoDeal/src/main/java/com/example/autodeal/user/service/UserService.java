@@ -3,6 +3,7 @@ package com.example.autodeal.user.service;
 import com.example.autodeal.exception.UserAlreadyExistsException;
 import com.example.autodeal.exception.UserNotFoundException;
 import com.example.autodeal.user.dto.SignUpDto;
+import com.example.autodeal.user.mapper.UserMapper;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.model.UserRole;
 import com.example.autodeal.user.model.VerificationToken;
@@ -19,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.example.autodeal.user.mapper.UserMapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -86,7 +86,7 @@ public class UserService implements UserDetailsService {
 
         userRepository.deleteById(id);
     }
-  
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel user = findUserByEmail(email);

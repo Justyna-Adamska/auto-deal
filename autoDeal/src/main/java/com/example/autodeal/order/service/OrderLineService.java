@@ -1,10 +1,10 @@
 package com.example.autodeal.order.service;
 
+import com.example.autodeal.exception.OrderLineValidationException;
 import com.example.autodeal.order.dto.OrderLineDTO;
 import com.example.autodeal.order.mapper.OrderMapper;
 import com.example.autodeal.order.model.OrderLineModel;
 import com.example.autodeal.order.repository.OrderLineRepository;
-import com.example.autodeal.exception.OrderLineValidationException;
 import com.example.autodeal.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

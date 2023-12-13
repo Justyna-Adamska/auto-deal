@@ -1,6 +1,6 @@
 package com.example.autodeal.order.controller;
 
-import com.example.autodeal.exception.*;
+import com.example.autodeal.exception.OrderNotFoundException;
 import com.example.autodeal.order.dto.OrderDTO;
 import com.example.autodeal.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
     @GetMapping
     public String listOrders(Model model) {
         model.addAttribute("orders", orderService.getAllOrders());

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<OrderModel, Integer> {
     Optional<OrderModel> findTopByUserIdOrderByOrderDateDesc(Integer userId);
+
     List<OrderModel> findAllByUserId(Integer userId);
 }
 

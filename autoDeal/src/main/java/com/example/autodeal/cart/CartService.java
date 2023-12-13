@@ -9,8 +9,6 @@ import com.example.autodeal.order.model.PaymentStatus;
 import com.example.autodeal.order.model.PaymentType;
 import com.example.autodeal.order.service.OrderService;
 import com.example.autodeal.order.service.PaymentDetailsService;
-import com.example.autodeal.product.dto.ProductDto;
-import com.example.autodeal.product.mapper.ProductMapper;
 import com.example.autodeal.product.model.ProductModel;
 import com.example.autodeal.product.service.ProductService;
 import com.example.autodeal.user.model.UserModel;
@@ -60,6 +58,7 @@ public class CartService {
 
         return cartRepository.findByUserId(userId).orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
     }
+
     @Transactional
     public void addItemToCart(Integer userId, Integer productId) throws CartUpdateException, ProductNotFoundException {
         ProductModel productModel = productService.findProductById(productId);
@@ -87,6 +86,7 @@ public class CartService {
         cart.getItems().removeIf(item -> item.getProductId().equals(productId.longValue()));
         cartRepository.save(cart);
     }
+
     @Transactional
     public void checkout(Integer userId, PaymentType paymentType) throws OrderCreationException, UserNotFoundException, CartNotFoundException {
         CartModel cart = getCartForUser(userId);
@@ -142,6 +142,7 @@ public class CartService {
     private void processPayment(PaymentDetailsDTO paymentDetails, OrderDTO orderDTO) {
 
     }
+
     @Transactional
     public void clearCartOnLogout(Integer userId) {
         cartRepository.deleteByUserId(userId);
