@@ -1,4 +1,4 @@
 package com.example.autodeal.util;
 
-public class Util{
+public class Util {
 }

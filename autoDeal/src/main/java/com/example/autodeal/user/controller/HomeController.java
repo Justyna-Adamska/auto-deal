@@ -3,6 +3,7 @@ package com.example.autodeal.user.controller;
 import com.example.autodeal.user.dto.SignUpDto;
 import com.example.autodeal.user.service.NotificationService;
 import com.example.autodeal.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.stream.Collectors;
 
@@ -39,16 +39,19 @@ public class HomeController {
     public String registration() {
         return "home/registration";
     }
+
     @PostMapping("/registration")
     public String registerNewUser(@RequestBody SignUpDto signUpDto, HttpServletResponse response, RedirectAttributes redirectAttributes) {
         userService.registerNewUser(signUpDto, response);
         redirectAttributes.addFlashAttribute("success", "User is registered successfully!");
         return "redirect:/registration-success";
     }
+
     @GetMapping("/registration-success")
     public String registrationSuccess() {
         return "home/registrationSuccess";
     }
+
     @GetMapping("/registrationConfirm")
     public String confirmRegistration(@RequestParam("token") String token) {
         userService.confirmUserRegistration(token);
@@ -90,6 +93,7 @@ public class HomeController {
     public String showForgotPasswordForm() {
         return "home/forgotPassword";
     }
+
     @PostMapping("/forgot-password")
     public String handleForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
         String response = notificationService.requestPasswordReset(email);

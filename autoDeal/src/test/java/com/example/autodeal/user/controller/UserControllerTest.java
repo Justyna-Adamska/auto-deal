@@ -97,7 +97,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/user/delete/" + user.getId()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/logout"));
+                .andExpect(redirectedUrl("/login"));
 
         verify(userService, times(1)).deleteUser(user.getId());
     }

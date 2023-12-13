@@ -25,6 +25,7 @@ public class OrderMapper {
         this.userRepository = userRepository;
         this.paymentDetailsMapper = paymentDetailsMapper;
     }
+
     public OrderDTO toOrderDTO(OrderModel order) {
         if (order == null) {
             throw new IllegalArgumentException("OrderModel cannot be null");

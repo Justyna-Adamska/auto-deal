@@ -2,7 +2,9 @@ package com.example.autodeal.order.model;
 
 import com.example.autodeal.user.model.UserModel;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

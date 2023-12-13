@@ -1,4 +1,4 @@
-package com.example.autodeal.product.mapper;
+package com.example.autodeal.product;
 
 import com.example.autodeal.product.dto.ProductDto;
 import com.example.autodeal.product.model.ProductModel;

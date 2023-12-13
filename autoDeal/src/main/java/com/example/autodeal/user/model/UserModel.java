@@ -2,7 +2,9 @@ package com.example.autodeal.user.model;
 
 import com.example.autodeal.order.model.OrderModel;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -42,7 +44,7 @@ public class UserModel {
     private String email;
 
     @NotNull(message = "Please Enter your Mobile Number")
-    @Pattern(regexp = "[7896]{1}[0-9]{9}",message = "Input a valid mobile number")
+    @Pattern(regexp = "[7896]{1}[0-9]{9}", message = "Input a valid mobile number")
     @Column(nullable = false, unique = true)
     private String phone;
 
@@ -64,7 +66,7 @@ public class UserModel {
     private VerificationToken verificationToken;
 
     @ManyToMany
-    @JoinTable (name="user_x_roles")
+    @JoinTable(name = "user_x_roles")
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<UserRole> roles;
 

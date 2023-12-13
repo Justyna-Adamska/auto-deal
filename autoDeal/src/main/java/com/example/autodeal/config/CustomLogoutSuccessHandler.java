@@ -33,10 +33,10 @@ public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler im
         super.onLogoutSuccess(request, response, authentication);
     }
 
-    public void logout( Authentication authentication) {
-       if (authentication== null){
-           return;
-       }
+    public void logout(Authentication authentication) {
+        if (authentication == null) {
+            return;
+        }
         String email = authentication.getName();
         UserModel user = userService.findUserByEmail(email);
         Integer userId = user.getId();
