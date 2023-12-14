@@ -109,13 +109,6 @@ public class CartServiceTest {
 
         assertThrows(ProductNotFoundException.class, () -> cartService.addItemToCart(userId, productId));
     }
-    @Test
-    void getCartForUser_CartNotFound_ShouldThrowException() {
-        Integer userId = 1;
-        setupAuthenticatedUser(userId, "ROLE_USER");
-        when(cartRepository.findByUserId(userId)).thenReturn(Optional.empty());
-        assertThrows(CartNotFoundException.class, () -> cartService.getCartForUser(userId));
-    }
 
     @Test
     void getCartForUser_NoAuthentication_ShouldThrowException() {
@@ -132,4 +125,35 @@ public class CartServiceTest {
         cartService.clearCartOnLogout(userId);
         verify(cartRepository).deleteByUserId(userId);
     }
+
+    @Test
+    void getCartForUser_WhenCartExists_ShouldReturnExistingCart() {
+
+        Integer userId = 1;
+        setupAuthenticatedUser(userId, "ROLE_USER");
+        CartModel existingCart = new CartModel();
+        existingCart.setUserId(userId);
+        when(cartRepository.findByUserId(userId)).thenReturn(Optional.of(existingCart));
+
+        CartModel result = cartService.getCartForUser(userId);
+
+        verify(cartRepository, never()).save(any(CartModel.class));
+        assertEquals(existingCart, result);
+    }
+
+    @Test
+    void getCartForUser_WhenCartDoesNotExist_ShouldCreateAndReturnNewCart() {
+
+        Integer userId = 1;
+        setupAuthenticatedUser(userId, "ROLE_USER");
+        when(cartRepository.findByUserId(userId)).thenReturn(Optional.empty());
+        when(cartRepository.save(any(CartModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        CartModel result = cartService.getCartForUser(userId);
+
+        verify(cartRepository).save(any(CartModel.class));
+        assertNotNull(result);
+        assertEquals(userId, result.getUserId());
+    }
+
 }

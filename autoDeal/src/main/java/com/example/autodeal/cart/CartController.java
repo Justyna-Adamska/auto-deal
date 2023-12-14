@@ -8,10 +8,16 @@ import com.example.autodeal.order.service.OrderService;
 import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 @RequestMapping("/cart")
@@ -28,33 +34,41 @@ public class CartController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/{userId}")
-    public String getCart(@PathVariable Integer userId, Model model) {
-        try {
-            CartModel cart = cartService.getCartForUser(userId);
-            model.addAttribute("cart", cart);
-            return "cart/view";
-        } catch (UserNotFoundException | CartNotFoundException e) {
-            model.addAttribute("error", e.getMessage());
-            return "error";
+
+    @GetMapping("")
+    public String showCart(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
         }
+        String email = authentication.getName();
+        UserModel user = userService.findUserByEmail(email);
+        if (user == null) {
+            model.addAttribute("error", "User not found.");
+            return "/cart/error";
+        }
+        CartModel cart = cartService.getCartForUser(user.getId());
+        model.addAttribute("cart", cart);
+        return "cart/cart";
     }
+
+
 
     @PostMapping("/add")
     public String addItemToCart(@RequestParam Integer userId, @RequestParam Integer productId, Model model) {
         try {
             cartService.addItemToCart(userId, productId);
-            return "redirect:/cart/" + userId;
+            return "redirect:/cart/cart" + userId;
         } catch (CartUpdateException | ProductNotFoundException e) {
             model.addAttribute("error", e.getMessage());
-            return "error";
+            return "/cart/error";
         }
     }
 
     @PostMapping("/remove")
     public String removeItemFromCart(@RequestParam Integer userId, @RequestParam Integer productId) {
         cartService.removeItemFromCart(userId, productId);
-        return "redirect:/cart/" + userId;
+        return "redirect:/cart/cart" + userId;
     }
 
     @PostMapping("/checkout")
@@ -70,7 +84,7 @@ public class CartController {
             }
         } catch (OrderCreationException | UserNotFoundException | CartNotFoundException e) {
             model.addAttribute("error", e.getMessage());
-            return "error";
+            return "/cart/error";
         }
     }
 
@@ -86,7 +100,7 @@ public class CartController {
             return "cart/depositConfirmation";
         } catch (UserNotFoundException | CartNotFoundException e) {
             model.addAttribute("error", e.getMessage());
-            return "error";
+            return "/cart/error";
         }
     }
 
@@ -106,7 +120,7 @@ public class CartController {
             return "cart/completedConfirmation";
         } catch (UserNotFoundException | PaymentDetailsException e) {
             model.addAttribute("error", e.getMessage());
-            return "error";
+            return "/cart/error";
         }
     }
 
