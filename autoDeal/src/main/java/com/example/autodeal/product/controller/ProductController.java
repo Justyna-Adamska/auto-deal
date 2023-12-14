@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -21,6 +22,16 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+
+    @GetMapping("/listings")
+    public String showCarListings(Model model) {
+        List<ProductDto> productDtos = productService.findAllProducts()
+                .stream()
+                .map(ProductMapper::mapToProductDto)
+                .collect(Collectors.toList());
+        model.addAttribute("products", productDtos);
+        return "/home/car-listings";
+    }
 
     //getting product by id
     @GetMapping("/id/{productId}")
