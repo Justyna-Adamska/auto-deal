@@ -4,58 +4,81 @@ import com.example.autodeal.exception.UserNotFoundException;
 import com.example.autodeal.order.model.PaymentType;
 import com.example.autodeal.order.service.OrderService;
 import com.example.autodeal.product.service.ProductService;
+import com.example.autodeal.user.model.UserModel;
 import com.example.autodeal.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class CartControllerTest {
 
+    @Mock
     private CartService cartService;
+
+    @Mock
     private UserService userService;
+
+    @Mock
     private OrderService orderService;
-    private ProductService productService;
-    private CartController cartController;
+
+    @Mock
     private Model model;
+
+    @Mock
+    private Authentication authentication;
+
+    private ProductService productService;
+
+    @Mock
+    private SecurityContext securityContext;
+
+    @InjectMocks
+    private CartController cartController;
 
     @BeforeEach
     public void setUp() {
-        cartService = mock(CartService.class);
-        userService = mock(UserService.class);
-        orderService = mock(OrderService.class);
-        model = mock(Model.class);
+        MockitoAnnotations.openMocks(this);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
         productService = mock(ProductService.class);
         cartController = new CartController(cartService, userService, orderService);
     }
 
     @Test
-    public void testGetCart_Success() throws Exception {
+    void whenShowCartCalledAuthenticated_thenReturnsCartView() {
+        String email = "user@example.com";
         Integer userId = 1;
-        CartModel mockCart = new CartModel();
-        when(cartService.getCartForUser(userId)).thenReturn(mockCart);
+        CartModel cartModel = new CartModel();
+        UserModel user = new UserModel();
+        user.setId(userId);
+        user.setEmail(email);
 
-        String viewName = cartController.getCart(userId, model);
+        when(authentication.getName()).thenReturn(email);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(userService.findUserByEmail(email)).thenReturn(user);
+        when(cartService.getCartForUser(userId)).thenReturn(cartModel);
 
-        verify(cartService).getCartForUser(userId);
-        verify(model).addAttribute("cart", mockCart);
-        assertEquals("cart/view", viewName);
+        String viewName = cartController.showCart(model);
+
+        verify(model).addAttribute("cart", cartModel);
+        assertEquals("cart/cart", viewName);
     }
 
 
-    @Test
-    public void testGetCart_UserNotFound() throws Exception {
-        Integer userId = 1;
-        when(cartService.getCartForUser(userId)).thenThrow(new UserNotFoundException("User not found"));
-
-        String viewName = cartController.getCart(userId, model);
-
-        verify(model).addAttribute(eq("error"), anyString());
-        assertEquals("error", viewName);
-    }
 
     @Test
     public void testAddItemToCart_Success() throws Exception {
@@ -67,10 +90,8 @@ public class CartControllerTest {
         String viewName = cartController.addItemToCart(userId, productId, model);
         verify(cartService).addItemToCart(userId, productId);
 
-        assertEquals("redirect:/cart/" + userId, viewName);
+        assertEquals("redirect:/cart/cart" + userId, viewName);
     }
-
-
 
     @Test
     public void testRemoveItemFromCart_Success() {
@@ -80,7 +101,7 @@ public class CartControllerTest {
         String viewName = cartController.removeItemFromCart(userId, productId);
 
         verify(cartService).removeItemFromCart(userId, productId);
-        assertEquals("redirect:/cart/" + userId, viewName);
+        assertEquals("redirect:/cart/cart" + userId, viewName);
     }
 
     @Test
@@ -91,9 +112,4 @@ public class CartControllerTest {
         verify(cartService).checkout(userId, PaymentType.DEPOSIT);
         assertEquals("redirect:/cart/order/depositConfirmation", viewName);
     }
-
-
-
-
-
 }

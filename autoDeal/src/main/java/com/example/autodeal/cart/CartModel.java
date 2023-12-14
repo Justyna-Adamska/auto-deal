@@ -59,7 +59,7 @@ public class CartModel {
     }
 
 
-    public BigDecimal calculateTotal() {
+    public BigDecimal getTotal() {
         BigDecimal total = BigDecimal.ZERO;
         for (CartItem item : items) {
             total = total.add(item.getPrice());

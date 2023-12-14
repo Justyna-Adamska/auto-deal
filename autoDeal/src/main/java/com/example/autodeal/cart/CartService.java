@@ -44,7 +44,7 @@ public class CartService {
         this.userService = userService;
         this.orderMapper = orderMapper;
     }
-
+@Transactional
     public CartModel getCartForUser(Integer userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -56,8 +56,14 @@ public class CartService {
             throw new UserNotFoundException("User not found.");
         }
 
-        return cartRepository.findByUserId(userId).orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
+        return cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    CartModel newCart = new CartModel();
+                    newCart.setUserId(userId);
+                    return cartRepository.save(newCart);
+                });
     }
+
 
     @Transactional
     public void addItemToCart(Integer userId, Integer productId) throws CartUpdateException, ProductNotFoundException {
@@ -112,7 +118,7 @@ public class CartService {
                                 .totalPrice(item.getPrice())
                                 .build())
                         .collect(Collectors.toSet()))
-                .totalAmount(cart.calculateTotal())
+                .totalAmount(cart.getTotal())
                 .build();
     }
 
