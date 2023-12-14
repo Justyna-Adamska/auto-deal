@@ -40,7 +40,7 @@ public class NotificationService {
 
     public void sendActivationEmail(String email, String activationToken) {
         try {
-            String activationUrl = "http://auto-deal.com/activate-account?token=" + activationToken;
+            String activationUrl = "http://localhost:8080/activate-account?token=" + activationToken;
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("Account Activation");
@@ -85,7 +85,7 @@ public class NotificationService {
 
 
     private void sendResetEmail(String email, String resetToken) {
-        String resetUrl = "http://auto-deal.com/reset-password?token=" + resetToken;
+        String resetUrl = "http://localhost:8080/reset-password?token=" + resetToken;
 
 
         SimpleMailMessage message = new SimpleMailMessage();
