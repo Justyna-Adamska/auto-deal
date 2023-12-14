@@ -1,5 +1,8 @@
 package com.example.autodeal.user.controller;
 
+import com.example.autodeal.product.ProductMapper;
+import com.example.autodeal.product.dto.ProductDto;
+import com.example.autodeal.product.service.ProductService;
 import com.example.autodeal.user.dto.SignUpDto;
 import com.example.autodeal.user.service.NotificationService;
 import com.example.autodeal.user.service.UserService;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,13 +29,14 @@ public class HomeController {
 
 
     private final UserService userService;
+    private final ProductService productService;
 
-    @Autowired
     private NotificationService notificationService;
 
-    public HomeController(UserService userService, NotificationService notificationService) {
+    public HomeController(UserService userService, NotificationService notificationService, ProductService productService) {
         this.userService = userService;
         this.notificationService = notificationService;
+        this.productService = productService;
     }
 
 
@@ -120,5 +125,15 @@ public class HomeController {
             redirectAttributes.addFlashAttribute("error", response);
             return "redirect:/reset-password?token=" + token;
         }
+    }
+
+    @GetMapping("/listings")
+    public String showCarListings(Model model) {
+        List<ProductDto> productDtos = productService.findAllProducts()
+                .stream()
+                .map(ProductMapper::mapToProductDto)
+                .collect(Collectors.toList());
+        model.addAttribute("products", productDtos);
+        return "/home/car-listings";
     }
 }
