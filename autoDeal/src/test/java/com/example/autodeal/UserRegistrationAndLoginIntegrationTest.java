@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
-@SpringBootTest
+@SpringBootTest(classes = AutoDealApplication.class)
 @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = {"/sql/delete-test-data.sql"})
 public class UserRegistrationAndLoginIntegrationTest {
 
