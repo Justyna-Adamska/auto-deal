@@ -73,7 +73,9 @@ public class UserRegistrationAndLoginIntegrationTest {
     @AfterEach
     public void cleanup() {
         verificationTokenRepository.deleteAll();
+        userRoleRepository.deleteAll();
         userRepository.deleteAll();
+
     }
 
 
