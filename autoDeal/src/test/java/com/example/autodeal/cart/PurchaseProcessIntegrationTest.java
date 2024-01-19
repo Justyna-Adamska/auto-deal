@@ -132,7 +132,9 @@ public class PurchaseProcessIntegrationTest {
         }
         if (testUser != null && testUser.getId() != null) {
             cartRepository.deleteByUserId(testUser.getId());
+            userRoleRepository.deleteById(testUser.getId());
             userRepository.deleteById(testUser.getId());
+
         }
     }
     @Test
