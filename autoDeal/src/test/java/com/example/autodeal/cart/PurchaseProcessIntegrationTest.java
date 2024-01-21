@@ -1,5 +1,6 @@
 package com.example.autodeal.cart;
 
+import com.example.autodeal.AutoDealApplication;
 import com.example.autodeal.order.dto.OrderDTO;
 import com.example.autodeal.order.dto.PaymentDetailsDTO;
 import com.example.autodeal.order.mapper.OrderMapper;
@@ -35,7 +36,7 @@ import java.util.HashSet;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest (classes = AutoDealApplication.class)
 @WithMockUser(username = "testuser@example.com", roles = "USER")
 @Transactional
 @ActiveProfiles("test")

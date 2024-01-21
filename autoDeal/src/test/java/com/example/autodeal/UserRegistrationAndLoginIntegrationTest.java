@@ -72,9 +72,14 @@ public class UserRegistrationAndLoginIntegrationTest {
 
     @AfterEach
     public void cleanup() {
+        System.out.println("czyszczę");
+
         verificationTokenRepository.deleteAll();
-        userRoleRepository.deleteAll();
+        System.out.println("verification");
+//        userRoleRepository.deleteAll();
+//        System.out.println("user role out");
         userRepository.deleteAll();
+        System.out.println("user out");
 
     }
 
